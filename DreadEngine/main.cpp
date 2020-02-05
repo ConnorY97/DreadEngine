@@ -41,6 +41,80 @@ int main()
 	auto minor = ogl_GetMinorVersion(); 
 	printf("GL: %i.%i\n", major, minor);
 
+
+	//Load shaders 
+	uint uiVertexShadersID = 0;
+	uint uiFragmentShaderID = 0; 
+	uint uiShaderProgramID = 0; 
+
+	//Vertex shader
+		//Getting the vertex shader code from a file 
+	std::fstream inFileStream("../Shaders/simple_vertex.glsl", std::ifstream::in); 
+
+	//Writting the code to a string 
+	std::string shaderData; 
+	std::stringstream stringStream;
+	if (inFileStream.is_open())
+	{
+		stringStream << inFileStream.rdbuf();
+		shaderData = stringStream.str();
+		inFileStream.close(); 
+	}
+
+	//Get free memeory on GPU to write code 
+	uiVertexShadersID = glCreateShader(GL_VERTEX_SHADER);
+	//Convert string to char 
+	const char* shaderCode = shaderData.c_str();
+	//Send in the char* to shader
+	glShaderSource(uiVertexShadersID, 1, (const GLchar**)&shaderCode, 0);
+	//Build
+	glCompileShader(uiVertexShadersID);
+
+	//Check if it compiled correctly 
+	GLint success = GL_FALSE; 
+	glGetShaderiv(uiShaderProgramID, GL_COMPILE_STATUS, &success);
+	if (success == GL_FALSE)
+		printf("Vertex shader failed"); 
+
+	//Fragment shader
+	//Same as above for fragment shader
+	std::fstream inFileStreamFrag("../Shaders/simple_frag.glsl", std::ifstream::in);
+
+	std::stringstream fragStringStream;
+	if (inFileStreamFrag.is_open())
+	{
+		fragStringStream << inFileStreamFrag.rdbuf();
+		shaderData = fragStringStream.str();
+		inFileStreamFrag.close(); 
+	}
+
+	uiFragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
+	shaderCode = shaderData.c_str(); 
+	glShaderSource(uiFragmentShaderID, 1, (const GLchar**)&shaderCode, 0);
+	glCompileShader(uiFragmentShaderID);
+
+	//Check
+	success = GL_FALSE;
+	glGetShaderiv(uiFragmentShaderID, GL_COMPILE_STATUS, &success);
+	if (success == GL_FALSE)
+		printf("Fragment shader failed"); 
+
+	//Link the shaders
+	uiShaderProgramID = glCreateProgram();
+
+	//Attach both shader by ID and type
+	glAttachShader(uiShaderProgramID, uiVertexShadersID);
+	glAttachShader(uiShaderProgramID, uiFragmentShaderID);
+
+	//Finally link the two pragrams 
+	glLinkProgram(uiShaderProgramID);
+
+	//Check if it was successful
+	glGetProgramiv(uiShaderProgramID, GL_LINK_STATUS, &success);
+	if (success == GL_FALSE)
+		printf("Linking failed"); 	
+
+	
 	//Create and 'load' a mesh 
 	//How many points 
 	const uint uiVerticiesSize = 6;
@@ -87,15 +161,28 @@ int main()
 			//DEPTH-BUFFER informs it to clear the distance to the closest pixel. To make sure it displays the new image 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, uiVerticiesSize);
-
 		//Part of the camera
 		glm::mat4 view = glm::lookAt(glm::vec3(10, 10, 10), glm::vec3(0), glm::vec3(0, 1, 0));
 		glm::mat4 projection = glm::perspective(glm::pi<float>() * 0.25f, 16 / 9.f, 0.1f, 1000.f);
 		glm::mat4 model = glm::mat4(1.0f);
 
 		glm::mat4 pvm = projection * view * model;
+
+		glm::vec4 color = glm::vec4(0.5f); 
+
+		//Turn shader on 
+		glUseProgram(uiShaderProgramID);
+
+		auto uniformLocation = glGetUniformLocation(uiShaderProgramID, "projectionViewMatrix");
+		glUniformMatrix4fv(uniformLocation, 1, false, glm::value_ptr(pvm)); 
+		uniformLocation = glGetUniformLocation(uiShaderProgramID, "modelMatrix");
+		glUniformMatrix4fv(uniformLocation, 1, false, glm::value_ptr(model));
+		uniformLocation = glGetUniformLocation(uiShaderProgramID, "color");
+		glUniformMatrix4fv(uniformLocation, 1, false, glm::value_ptr(model));
+		glUniform4fv(uniformLocation, 1, glm::value_ptr(color)); 
+
+		glBindVertexArray(VAO);
+		glDrawArrays(GL_TRIANGLES, 0, uiVerticiesSize);
 
 		// our game logic and update code goes here!
 		// so does our render code!
@@ -108,6 +195,8 @@ int main()
 	//Code
 
 	//Closing the window and terminating the GLFW system
+	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &VAO);
 	glfwDestroyWindow(pWindow); 
 	glfwTerminate(); 
 	return 0;
