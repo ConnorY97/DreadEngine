@@ -102,15 +102,21 @@ int main()
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &IBO); 
 
+	//A collection of verticies 
 	glBindVertexArray(VAO);
+
+	//Positions of the verticies 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, verticies_size * sizeof(glm::vec3), verticies, GL_STATIC_DRAW);
+
+	//The order in which those verticies are connected 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_buffer_size * sizeof(int), index_buffer, GL_STATIC_DRAW);
 
+	
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), 0);
-	glBufferData(GL_ARRAY_BUFFER, verticies_size * sizeof(glm::vec3), &verticies[0], GL_STATIC_DRAW);
+
 
 
 	glBindVertexArray(0);
@@ -126,8 +132,9 @@ int main()
 
 
 	// Wire-frame mode
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
+	float timer = 0.0f;
 	//Game Loop 
 		//Checking if the window should close if the Escape key is pressed 
 	while (glfwWindowShouldClose(pWindow) == false &&
@@ -137,12 +144,13 @@ int main()
 			//COLOR_BUFFER informs OpenGL to wipe the back-buffer colours clean 
 			//DEPTH-BUFFER informs it to clear the distance to the closest pixel. To make sure it displays the new image 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+		timer += 0.1f;
 		//Part of the camera
 		glm::mat4 view = glm::lookAt(glm::vec3(0, 0, 10), glm::vec3(0), glm::vec3(0, 1, 0));
 		glm::mat4 projection = glm::perspective(glm::pi<float>() * 0.25f, 16 / 9.f, 0.1f, 1000.f);
 
-		model = glm::rotate(model, 0.016f, glm::vec3(0, 1, 0));
+		//model = glm::rotate(model, 0.016f, glm::vec3(0, 1, 0));
+		model = glm::translate(model, glm::vec3(glm::sin(timer) / 10,0,0));
 
 		glm::mat4 pvm = projection * view * model;
 
@@ -153,7 +161,7 @@ int main()
 		pShader->Use(); 
 		pShader->setMat4("projection_view_matrix", pvm);
 		pShader->setMat4("model_matrix", model);
-		pShader->setVec4("color", color); 
+		//pShader->setVec4("color", color); 
 
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, index_buffer_size, GL_UNSIGNED_INT, 0);;
