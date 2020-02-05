@@ -10,6 +10,8 @@
 
 using uint = unsigned int; 
 
+void print_shader_error_log(uint shader_id);
+
 int main()
 {
 	//Initiating the GLFW system
@@ -172,5 +174,23 @@ int main()
 	glfwDestroyWindow(pWindow); 
 	glfwTerminate(); 
 	return 0;
+}
+
+void print_shader_error_log(uint shader_id)
+{
+	// Get the length of the error message
+	GLint log_length = 0;
+	glGetProgramiv(shader_id, GL_INFO_LOG_LENGTH, &log_length);
+	// Create the error buffer
+	char* log = new char[log_length];
+	// Copy the error message
+	glGetProgramInfoLog(shader_id, log_length, 0, log);
+
+	// Create the error message
+	std::string error_message(log);
+	error_message += "SHADER_FAILED_TO_COMPILE";
+	printf(error_message.c_str());
+	// Clean up anyway
+	delete[] log;
 }
 
