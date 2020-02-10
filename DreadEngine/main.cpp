@@ -56,52 +56,100 @@ int main()
 	//Create and 'load' a mesh 
 	//How many points 
 	//Creating those points 
+	//const uint verticies_size = 8;
+	//glm::vec3 verticies[verticies_size]
+	//{
+	//	glm::vec3(-0.5f, 0.5f, -0.5f),
+	//	glm::vec3(0.5f, 0.5f, -0.5f),
+	//	glm::vec3(-0.5f, -0.5f, -0.5f),
+	//	glm::vec3(0.5f, -0.5f, -0.5f),
+	//	//
+	//	glm::vec3(-0.5f, 0.5f, 0.5f),
+	//	glm::vec3(0.5f, 0.5f, 0.5f),
+	//	glm::vec3(-0.5f, -0.5f, 0.5f),
+	//	glm::vec3(0.5f, -0.5f, 0.5f)
+	//};
+	//const uint index_buffer_size = 3 * 2 * 6;
+	//int index_buffer[index_buffer_size]
+	//{
+	//	// Back
+	//	0,1,2,
+	//	3,2,1,
+
+	//	// Front
+	//	6,5,4,
+	//	5,6,7,
+
+	//	// Bottom
+	//	2,3,6,
+	//	7,6,3,
+
+	//	// Right
+	//	7,3,1,
+	//	1,5,7,
+
+	//	// Left 
+	//	4,0,2,
+	//	6,4,2,
+
+	//	// Top
+	//	1,0,4,
+	//	5,1,4
+	//};
+
 	const uint verticies_size = 8;
 	glm::vec3 verticies[verticies_size]
 	{
-		glm::vec3(-0.5f, 0.5f, -0.5f),
-		glm::vec3(0.5f, 0.5f, -0.5f),
-		glm::vec3(-0.5f, -0.5f, -0.5f),
-		glm::vec3(0.5f, -0.5f, -0.5f),
-		//
+		//First plane 
+		glm::vec3(-0.5f, 0.0f, 0.0f),
+		glm::vec3(-0.5f, 0.5f, 0.0f),
+		glm::vec3(0.0f, 0.5, 0.0f),
+		glm::vec3(0.0f, 0.0f, 0.0f),
+
+		//Second plane 
+		glm::vec3(-0.5f, 0.0f, 0.5f),
 		glm::vec3(-0.5f, 0.5f, 0.5f),
-		glm::vec3(0.5f, 0.5f, 0.5f),
-		glm::vec3(-0.5f, -0.5f, 0.5f),
-		glm::vec3(0.5f, -0.5f, 0.5f)
+		glm::vec3(0.0f, 0.5f, 0.5f),
+		glm::vec3(0.0f, 0.0f, 0.5f), 
+
+
 	};
-	const uint index_buffer_size = 3 * 2 * 6;
+	const uint index_buffer_size = 6 * 6;
 	int index_buffer[index_buffer_size]
 	{
-		// Back
-		0,1,2,
-		3,2,1,
+		//Front
+		0, 1, 3,
+		2, 3, 1,
 
-		// Front
-		6,5,4,
-		5,6,7,
+		//Back
+		7, 5, 4,
+		5, 7, 6,
 
-		// Bottom
-		2,3,6,
-		7,6,3,
+		//top 
+		2, 1, 5,
+		2, 5, 6,
 
-		// Right
-		7,3,1,
-		1,5,7,
+		//Bottom
+		4, 0, 3,
+		3, 7, 4,
 
-		// Left 
-		4,0,2,
-		6,4,2,
+		//Left
+		4, 1, 0, 
+		1, 4, 5,
 
-		// Top
-		1,0,4,
-		5,1,4
+		//Right
+		7, 3, 2,
+		6, 7, 2
 	};
+
+
 
 
 	//Vertex array object 
 	GLuint VAO;
 	//Vertex
 	GLuint VBO;
+	//Optional, allows you to choose connection order 
 	uint IBO;
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
@@ -111,11 +159,15 @@ int main()
 	glBindVertexArray(VAO);
 
 	//Positions of the verticies 
+	//Asking for free memory on the graphics card 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	//Filling the memory with data 
 	glBufferData(GL_ARRAY_BUFFER, verticies_size * sizeof(glm::vec3), verticies, GL_STATIC_DRAW);
 
 	//The order in which those verticies are connected 
+	//Asking for free memory on the graphics card
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
+	//Filling the memory with data 
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_buffer_size * sizeof(int), index_buffer, GL_STATIC_DRAW);
 
 
