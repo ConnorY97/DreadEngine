@@ -5,7 +5,7 @@
 
 class Camera
 {
-private:
+protected:
 
 	//Position of the camera in the world 
 	glm::mat4 world_transform; 

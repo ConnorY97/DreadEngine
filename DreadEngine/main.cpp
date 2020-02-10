@@ -51,11 +51,11 @@ int main()
 	Shader* pShader = new Shader("../Shaders/simple_vertex.glsl", "../Shaders/simple_color.glsl");
 
 
-	
+#pragma region Geometry
+
 	//Create and 'load' a mesh 
 	//How many points 
-	//const uint uiVerticiesSize = 8;
-	//Creathing those points 
+	//Creating those points 
 	const uint verticies_size = 8;
 	glm::vec3 verticies[verticies_size]
 	{
@@ -75,36 +75,37 @@ int main()
 		// Back
 		0,1,2,
 		3,2,1,
-		
+
 		// Front
 		6,5,4,
 		5,6,7,
-		
+
 		// Bottom
 		2,3,6,
 		7,6,3,
-		
+
 		// Right
 		7,3,1,
 		1,5,7,
-		
+
 		// Left 
 		4,0,2,
 		6,4,2,
-		
+
 		// Top
 		1,0,4,
 		5,1,4
 	};
 
+
 	//Vertex array object 
 	GLuint VAO;
 	//Vertex
 	GLuint VBO;
-	uint IBO; 
+	uint IBO;
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &IBO); 
+	glGenBuffers(1, &IBO);
 
 	//A collection of verticies 
 	glBindVertexArray(VAO);
@@ -117,7 +118,7 @@ int main()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_buffer_size * sizeof(int), index_buffer, GL_STATIC_DRAW);
 
-	
+
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), 0);
 
@@ -133,6 +134,8 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 
 	glm::mat4 model = glm::mat4(1.0f);
+#pragma endregion
+
 
 
 	// Wire-frame mode
@@ -150,32 +153,20 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		timer += 0.1f;
 
-		//Part of the camera
-		//glm::mat4 view = glm::lookAt(glm::vec3(0, 0, 5), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-		//glm::mat4 projection = glm::perspective(glm::pi<float>() * 0.25f, 16 / 9.f, 0.1f, 1000.f);
-
 		main_camera.update(1 / 60.f); 
 
 
 		model = glm::rotate(model, 0.016f, glm::vec3(0, 1, 0));
-		//model = glm::translate(model, glm::vec3(glm::sin(timer) / 10,0,0));
-
-		//glm::mat4 pvm = projection * view * model;
 
 		glm::vec4 color = glm::vec4(0.5f); 
 
 		//Turn shader on 
-		//glUseProgram(uiShaderProgramID);
 		pShader->Use(); 
 		pShader->setMat4("projection_view_matrix", main_camera.get_projection_view());
 		pShader->setMat4("model_matrix", model);
-		//pShader->setVec4("colour", colour); 
 
 		glBindVertexArray(VAO);
 		glDrawElements(GL_TRIANGLES, index_buffer_size, GL_UNSIGNED_INT, 0);;
-
-		// our game logic and update code goes here!
-		// so does our render code!
 
 		//Updating the monitors display by swapping the renderer back buffer 
 		glfwSwapBuffers(pWindow);
