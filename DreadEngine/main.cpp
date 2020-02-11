@@ -18,6 +18,7 @@ void print_shader_error_log(uint shader_id);
 
 int main()
 {
+#pragma region Initialisation and checks 
 	//Initiating the GLFW system
 		//Checking if it worked
 	if (glfwInit() == false)
@@ -25,17 +26,16 @@ int main()
 
 	//Creating the window 
 	GLFWwindow* pWindow = glfwCreateWindow(1280, 720, "Computer Graphics", nullptr, nullptr);
-
 	//Creating the camera
-	FlyCamera main_camera = FlyCamera(); 
+	FlyCamera main_camera = FlyCamera();
 
 	//Checking if the window was created
 	if (pWindow == nullptr)
 	{
 		glfwTerminate();
-		return -2; 
+		return -2;
 	}
-	
+
 	glfwMakeContextCurrent(pWindow);
 
 	//Remap all OpenGL's functions to the correct versions and feature sets
@@ -48,17 +48,16 @@ int main()
 
 	//Test which version of OpenGl the program is running 
 	auto major = ogl_GetMajorVersion();
-	auto minor = ogl_GetMinorVersion(); 
+	auto minor = ogl_GetMinorVersion();
 	printf("GL: %i.%i\n", major, minor);
+
+#pragma endregion
 
 	Shader* pShader = new Shader("../Shaders/simple_vertex.glsl", "../Shaders/simple_color.glsl");
 
 	Mesh* cube = Primitives::cube();
 	Mesh* plane = Primitives::plane(); 
-	Mesh* sphere = Primitives::sphere(2, 100, 100); 
-
-
-	
+	Mesh* sphere = Primitives::sphere(2, 100, 100); 	
 
 	//Clearing the screen to a specific colour before starting the game loop 
 	glClearColor(0.25f, 0.25f, 0.25f, 1);
@@ -68,8 +67,19 @@ int main()
 	glm::mat4 model = glm::mat4(1.0f);
 
 	// Wire-frame mode
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
+#pragma region Bools
+	bool draw_cube = false;
+	bool draw_plane = false;
+	bool draw_sphere = false;
+
+	bool was_z_down = false;
+	bool was_x_down = false;
+	bool was_c_down = false;
+#pragma endregion
+
+	
 	ULONGLONG previous = GetTickCount64(); 
 	//Game Loop 
 		//Checking if the window should close if the Escape key is pressed 
@@ -88,36 +98,77 @@ int main()
 
 		main_camera.update(delta_time);
 
-		//model = glm::rotate(model, 0.016f, glm::vec3(0, 1, 0));
-
 		glm::vec4 color = glm::vec4(0.5f); 
+		
+#pragma region Drawing
+		if (glfwGetKey(pWindow, GLFW_KEY_1))
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		if (glfwGetKey(pWindow, GLFW_KEY_2))
+			glPolygonMode(GL_FRONT, GL_FILL);
+		if (glfwGetKey(pWindow, GLFW_KEY_3))
+			glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
 
 		//Turn shader on 
-		pShader->Use(); 
+		pShader->Use();
 		pShader->setMat4("projection_view_matrix", main_camera.get_projection_view());
 		pShader->setMat4("model_matrix", model);
 
-		//cube->draw(pShader); 
-		//plane->draw(pShader); 
-		sphere->draw(pShader); 
 
+		if (glfwGetKey(pWindow, GLFW_KEY_Z))
+		{
+			if (!was_z_down)
+			{
+				was_z_down = true;
+				draw_cube = !draw_cube;
+			}
+		}
+		else
+			was_z_down = false;
+		if (glfwGetKey(pWindow, GLFW_KEY_X))
+		{
+			if (!was_x_down)
+			{
+				was_x_down = true;
+				draw_plane = !draw_plane;
+			}
+		}
+		else
+			was_x_down = false;
+		if (glfwGetKey(pWindow, GLFW_KEY_C))
+		{
+			if (!was_c_down)
+			{
+				was_c_down = true;
+				draw_sphere = !draw_sphere;
+			}
+		}
+		else
+			was_c_down = false;
+
+		if (draw_cube)
+			cube->draw(pShader);
+		if (draw_plane)
+			plane->draw(pShader);
+		if (draw_sphere)
+			sphere->draw(pShader);
+#pragma endregion
+		
 		//Updating the monitors display by swapping the renderer back buffer 
 		glfwSwapBuffers(pWindow);
 		//Polling any events sent from the OS
 		glfwPollEvents();
 	}
-	//Code
-
+#pragma region Memory cleaning
 	//Closing the window and terminating the GLFW system	
-	glfwDestroyWindow(pWindow); 
-	glfwTerminate(); 
+	glfwDestroyWindow(pWindow);
+	glfwTerminate();
 	delete cube;
-	cube = nullptr; 
+	cube = nullptr;
 	delete plane;
-	plane = nullptr; 
-	delete sphere; 
-	sphere = nullptr; 
-	
+	plane = nullptr;
+	delete sphere;
+	sphere = nullptr;
+#pragma endregion
 	return 0;
 }
 
