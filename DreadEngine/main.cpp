@@ -10,6 +10,7 @@
 #include "FlyCamera.h"
 #include <vector>
 #include "Mesh.h"
+#include "Primitives.h"
 
 using uint = unsigned int; 
 
@@ -52,69 +53,9 @@ int main()
 
 	Shader* pShader = new Shader("../Shaders/simple_vertex.glsl", "../Shaders/simple_color.glsl");
 
-#pragma region Cube
-	std::vector<Vertex> cube_verticies
-	{
-		//First plane 
-		Vertex(-0.5f, -0.5f, -0.5f),
-		Vertex(-0.5f, 0.5f, -0.5f),
-		Vertex(0.5f, 0.5, -0.5f),
-		Vertex(0.5f, -0.5f, -0.5f),
-
-		//Second plane 
-		Vertex(-0.5f, -0.5f, 0.5f),
-		Vertex(-0.5f, 0.5f, 0.5f),
-		Vertex(0.5f, 0.5f, 0.5f),
-		Vertex(0.5f, -0.5f, 0.5f)
-	};
-
-	std::vector<uint> cube_verticies_index
-	{
-		//Front
-		0, 1, 3,
-		2, 3, 1,
-
-		//Back
-		7, 5, 4,
-		5, 7, 6,
-
-		//top 
-		2, 1, 5,
-		2, 5, 6,
-
-		//Bottom
-		4, 0, 3,
-		3, 7, 4,
-
-		//Left
-		4, 1, 0, 
-		1, 4, 5,
-
-		//Right
-		7, 3, 2,
-		6, 7, 2
-	};
-
-	Mesh cube(cube_verticies, cube_verticies_index); 
-#pragma endregion
-
-#pragma region Plane
-	std::vector<Vertex> plane_verticies
-	{
-		Vertex(-1.0f, -0.5f, -1.0f),
-		Vertex(-1.0f, -0.5f, 1.0f),
-		Vertex(1.0f, -0.5f, 1.0f),
-		Vertex(1.0f, -0.5f, -1.0f)
-	};
-
-	std::vector<uint> plane_verticies_index
-	{
-		0, 1, 3,
-		2, 3, 1
-	};
-
-	Mesh plane(plane_verticies, plane_verticies_index); 
-#pragma endregion
+	Mesh* cube = Primitives::cube();
+	Mesh* plane = Primitives::plane(); 
+	Mesh* sphere = Primitives::sphere(2, 100, 100); 
 
 
 	
@@ -127,7 +68,7 @@ int main()
 	glm::mat4 model = glm::mat4(1.0f);
 
 	// Wire-frame mode
-	glPolygonMode(GL_BACK, GL_LINE);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	float timer = 0.0f;
 	//Game Loop 
@@ -143,7 +84,7 @@ int main()
 
 		main_camera.update(1 / 60.f); 
 
-		model = glm::rotate(model, 0.016f, glm::vec3(0, 1, 0));
+		//model = glm::rotate(model, 0.016f, glm::vec3(0, 1, 0));
 
 		glm::vec4 color = glm::vec4(0.5f); 
 
@@ -152,8 +93,9 @@ int main()
 		pShader->setMat4("projection_view_matrix", main_camera.get_projection_view());
 		pShader->setMat4("model_matrix", model);
 
-		cube.draw(pShader); 
-		plane.draw(pShader); 
+		cube->draw(pShader); 
+		plane->draw(pShader); 
+		sphere->draw(pShader); 
 
 		//Updating the monitors display by swapping the renderer back buffer 
 		glfwSwapBuffers(pWindow);
@@ -165,6 +107,13 @@ int main()
 	//Closing the window and terminating the GLFW system	
 	glfwDestroyWindow(pWindow); 
 	glfwTerminate(); 
+	delete cube;
+	cube = nullptr; 
+	delete plane;
+	plane = nullptr; 
+	delete sphere; 
+	sphere = nullptr; 
+	
 	return 0;
 }
 

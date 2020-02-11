@@ -8,7 +8,7 @@ void Camera::update_projection_view_transform()
 Camera::Camera()
 {
 	//Set Defaults 
-	this->set_perspective(90/*degrees*/ * 4.14159f / 180/*convert to radians*/, 16 / 9.0f/*wide screen ratio*/, 0.01f, 50.0f); 
+	this->set_perspective(45/*degrees*/ * 4.14159f / 180/*convert to radians*/, 16 / 9.0f/*wide screen ratio*/, 0.01f, 50.0f); 
 	this->set_look_at(glm::vec3(0, 0, 10), glm::vec3(0), glm::vec3(0, 10, 0)); 
 }
 

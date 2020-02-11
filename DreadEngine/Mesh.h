@@ -51,7 +51,7 @@ public:
 		Brief: Draws the shapes with a given shader
 	*/
 	void draw(Shader* shader); 
-private:
+
 	//Render Data
 	uint VAO, VBO, IBO; 
 
