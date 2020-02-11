@@ -8,6 +8,8 @@
 #include <sstream>
 #include "Shader.h"
 #include "FlyCamera.h"
+#include <vector>
+#include "Mesh.h"
 
 using uint = unsigned int; 
 
@@ -35,7 +37,7 @@ int main()
 	
 	glfwMakeContextCurrent(pWindow);
 
-	//Remap all OpenGL's fucntions to the correct versions and feature sets
+	//Remap all OpenGL's functions to the correct versions and feature sets
 	if (ogl_LoadFunctions() == ogl_LOAD_FAILED)
 	{
 		glfwDestroyWindow(pWindow);
@@ -50,72 +52,22 @@ int main()
 
 	Shader* pShader = new Shader("../Shaders/simple_vertex.glsl", "../Shaders/simple_color.glsl");
 
-
-#pragma region Geometry
-
-	//Create and 'load' a mesh 
-	//How many points 
-	//Creating those points 
-	//const uint verticies_size = 8;
-	//glm::vec3 verticies[verticies_size]
-	//{
-	//	glm::vec3(-0.5f, 0.5f, -0.5f),
-	//	glm::vec3(0.5f, 0.5f, -0.5f),
-	//	glm::vec3(-0.5f, -0.5f, -0.5f),
-	//	glm::vec3(0.5f, -0.5f, -0.5f),
-	//	//
-	//	glm::vec3(-0.5f, 0.5f, 0.5f),
-	//	glm::vec3(0.5f, 0.5f, 0.5f),
-	//	glm::vec3(-0.5f, -0.5f, 0.5f),
-	//	glm::vec3(0.5f, -0.5f, 0.5f)
-	//};
-	//const uint index_buffer_size = 3 * 2 * 6;
-	//int index_buffer[index_buffer_size]
-	//{
-	//	// Back
-	//	0,1,2,
-	//	3,2,1,
-
-	//	// Front
-	//	6,5,4,
-	//	5,6,7,
-
-	//	// Bottom
-	//	2,3,6,
-	//	7,6,3,
-
-	//	// Right
-	//	7,3,1,
-	//	1,5,7,
-
-	//	// Left 
-	//	4,0,2,
-	//	6,4,2,
-
-	//	// Top
-	//	1,0,4,
-	//	5,1,4
-	//};
-
-	const uint verticies_size = 8;
-	glm::vec3 verticies[verticies_size]
+	std::vector<Vertex> cube_verticies
 	{
 		//First plane 
-		glm::vec3(-0.5f, 0.0f, 0.0f),
-		glm::vec3(-0.5f, 0.5f, 0.0f),
-		glm::vec3(0.0f, 0.5, 0.0f),
-		glm::vec3(0.0f, 0.0f, 0.0f),
+		Vertex(-0.5f, 0.0f, 0.0f),
+		Vertex(-0.5f, 0.5f, 0.0f),
+		Vertex(0.0f, 0.5, 0.0f),
+		Vertex(0.0f, 0.0f, 0.0f),
 
 		//Second plane 
-		glm::vec3(-0.5f, 0.0f, 0.5f),
-		glm::vec3(-0.5f, 0.5f, 0.5f),
-		glm::vec3(0.0f, 0.5f, 0.5f),
-		glm::vec3(0.0f, 0.0f, 0.5f), 
-
-
+		Vertex(-0.5f, 0.0f, 0.5f),
+		Vertex(-0.5f, 0.5f, 0.5f),
+		Vertex(0.0f, 0.5f, 0.5f),
+		Vertex(0.0f, 0.0f, 0.5f)
 	};
-	const uint index_buffer_size = 6 * 6;
-	int index_buffer[index_buffer_size]
+
+	std::vector<uint> cube_verticies_index
 	{
 		//Front
 		0, 1, 3,
@@ -142,43 +94,8 @@ int main()
 		6, 7, 2
 	};
 
-
-
-
-	//Vertex array object 
-	GLuint VAO;
-	//Vertex
-	GLuint VBO;
-	//Optional, allows you to choose connection order 
-	uint IBO;
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &IBO);
-
-	//A collection of verticies 
-	glBindVertexArray(VAO);
-
-	//Positions of the verticies 
-	//Asking for free memory on the graphics card 
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	//Filling the memory with data 
-	glBufferData(GL_ARRAY_BUFFER, verticies_size * sizeof(glm::vec3), verticies, GL_STATIC_DRAW);
-
-	//The order in which those verticies are connected 
-	//Asking for free memory on the graphics card
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-	//Filling the memory with data 
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, index_buffer_size * sizeof(int), index_buffer, GL_STATIC_DRAW);
-
-
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), 0);
-
-
-
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	Mesh cube(cube_verticies, cube_verticies_index); 
+	
 
 	//Clearing the screen to a specific colour before starting the game loop 
 	glClearColor(0.25f, 0.25f, 0.25f, 1);
@@ -186,9 +103,6 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 
 	glm::mat4 model = glm::mat4(1.0f);
-#pragma endregion
-
-
 
 	// Wire-frame mode
 	glPolygonMode(GL_BACK, GL_LINE);
@@ -207,7 +121,6 @@ int main()
 
 		main_camera.update(1 / 60.f); 
 
-
 		model = glm::rotate(model, 0.016f, glm::vec3(0, 1, 0));
 
 		glm::vec4 color = glm::vec4(0.5f); 
@@ -217,8 +130,7 @@ int main()
 		pShader->setMat4("projection_view_matrix", main_camera.get_projection_view());
 		pShader->setMat4("model_matrix", model);
 
-		glBindVertexArray(VAO);
-		glDrawElements(GL_TRIANGLES, index_buffer_size, GL_UNSIGNED_INT, 0);;
+		cube.draw(pShader); 
 
 		//Updating the monitors display by swapping the renderer back buffer 
 		glfwSwapBuffers(pWindow);
@@ -227,9 +139,7 @@ int main()
 	}
 	//Code
 
-	//Closing the window and terminating the GLFW system
-	glDeleteBuffers(1, &VBO);
-	glDeleteBuffers(1, &VAO);
+	//Closing the window and terminating the GLFW system	
 	glfwDestroyWindow(pWindow); 
 	glfwTerminate(); 
 	return 0;
