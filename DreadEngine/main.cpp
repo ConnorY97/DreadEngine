@@ -52,19 +52,20 @@ int main()
 
 	Shader* pShader = new Shader("../Shaders/simple_vertex.glsl", "../Shaders/simple_color.glsl");
 
+#pragma region Cube
 	std::vector<Vertex> cube_verticies
 	{
 		//First plane 
-		Vertex(-0.5f, 0.0f, 0.0f),
-		Vertex(-0.5f, 0.5f, 0.0f),
-		Vertex(0.0f, 0.5, 0.0f),
-		Vertex(0.0f, 0.0f, 0.0f),
+		Vertex(-0.5f, -0.5f, -0.5f),
+		Vertex(-0.5f, 0.5f, -0.5f),
+		Vertex(0.5f, 0.5, -0.5f),
+		Vertex(0.5f, -0.5f, -0.5f),
 
 		//Second plane 
-		Vertex(-0.5f, 0.0f, 0.5f),
+		Vertex(-0.5f, -0.5f, 0.5f),
 		Vertex(-0.5f, 0.5f, 0.5f),
-		Vertex(0.0f, 0.5f, 0.5f),
-		Vertex(0.0f, 0.0f, 0.5f)
+		Vertex(0.5f, 0.5f, 0.5f),
+		Vertex(0.5f, -0.5f, 0.5f)
 	};
 
 	std::vector<uint> cube_verticies_index
@@ -95,6 +96,27 @@ int main()
 	};
 
 	Mesh cube(cube_verticies, cube_verticies_index); 
+#pragma endregion
+
+#pragma region Plane
+	std::vector<Vertex> plane_verticies
+	{
+		Vertex(-1.0f, -0.5f, -1.0f),
+		Vertex(-1.0f, -0.5f, 1.0f),
+		Vertex(1.0f, -0.5f, 1.0f),
+		Vertex(1.0f, -0.5f, -1.0f)
+	};
+
+	std::vector<uint> plane_verticies_index
+	{
+		0, 1, 3,
+		2, 3, 1
+	};
+
+	Mesh plane(plane_verticies, plane_verticies_index); 
+#pragma endregion
+
+
 	
 
 	//Clearing the screen to a specific colour before starting the game loop 
@@ -131,6 +153,7 @@ int main()
 		pShader->setMat4("model_matrix", model);
 
 		cube.draw(pShader); 
+		plane.draw(pShader); 
 
 		//Updating the monitors display by swapping the renderer back buffer 
 		glfwSwapBuffers(pWindow);
