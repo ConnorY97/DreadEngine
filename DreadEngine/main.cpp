@@ -70,7 +70,7 @@ int main()
 	// Wire-frame mode
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-	float timer = 0.0f;
+	ULONGLONG previous = GetTickCount64(); 
 	//Game Loop 
 		//Checking if the window should close if the Escape key is pressed 
 	while (glfwWindowShouldClose(pWindow) == false &&
@@ -80,9 +80,13 @@ int main()
 			//COLOR_BUFFER informs OpenGL to wipe the back-buffer colours clean 
 			//DEPTH-BUFFER informs it to clear the distance to the closest pixel. To make sure it displays the new image 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		timer += 0.1f;
+		
+		//Delta Time
+		ULONGLONG now = GetTickCount64();
+		float delta_time = float(now - previous) / 1000.0f;
+		previous = now; 
 
-		main_camera.update(1 / 60.f); 
+		main_camera.update(delta_time);
 
 		//model = glm::rotate(model, 0.016f, glm::vec3(0, 1, 0));
 
@@ -93,8 +97,8 @@ int main()
 		pShader->setMat4("projection_view_matrix", main_camera.get_projection_view());
 		pShader->setMat4("model_matrix", model);
 
-		cube->draw(pShader); 
-		plane->draw(pShader); 
+		//cube->draw(pShader); 
+		//plane->draw(pShader); 
 		sphere->draw(pShader); 
 
 		//Updating the monitors display by swapping the renderer back buffer 
