@@ -11,6 +11,7 @@
 #include <vector>
 #include "Mesh.h"
 #include "Primitives.h"
+#include "OBJMesh.h"
 
 using uint = unsigned int; 
 
@@ -57,17 +58,17 @@ int main()
 
 	Mesh* cube = Primitives::cube();
 	Mesh* plane = Primitives::plane(); 
-	Mesh* sphere = Primitives::sphere(2, 100, 100); 	
+	Mesh* sphere = Primitives::sphere(2, 100, 100);
+
+	aie::OBJMesh* bunbun = new aie::OBJMesh();
+	bunbun->load("../Models/stanford/Bunny.obj");
 
 	//Clearing the screen to a specific colour before starting the game loop 
-	glClearColor(0.25f, 0.25f, 0.25f, 1);
+	glClearColor(0.0f, 0.0f, 0.0f, 1);
 	//Enable the depth buffer 
 	glEnable(GL_DEPTH_TEST);
 
 	glm::mat4 model = glm::mat4(1.0f);
-
-	// Wire-frame mode
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 #pragma region Bools
 	bool draw_cube = false;
@@ -151,6 +152,8 @@ int main()
 			plane->draw(pShader);
 		if (draw_sphere)
 			sphere->draw(pShader);
+
+		bunbun->draw(); 
 #pragma endregion
 		
 		//Updating the monitors display by swapping the renderer back buffer 

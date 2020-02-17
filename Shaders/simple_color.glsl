@@ -6,5 +6,5 @@ out vec4 final_color;
 
 void main()
 {
-    final_color = vec4(gl_FragCoord.xy * 0.001,0,1);
+    final_color = vec4(0.01162, 0.66274, 0.98823, 0);
 }
