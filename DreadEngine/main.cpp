@@ -66,7 +66,8 @@ int main()
 	Mesh* plane = Primitives::plane(); 
 	Mesh* sphere = Primitives::sphere(2, 100, 100);
 
-	Texture* baby_yoda = new Texture("../Images/1_mk1-6aYaf_Bes1E3Imhc0A.jpeg"); 
+	Texture* test_image = new Texture("../Images/test.jpg"); 
+	Texture* baby_yoda = new Texture("../Images/1_mk1-6aYaf_Bes1E3Imhc0A.jpeg");
 
 
 
@@ -159,7 +160,7 @@ int main()
 			was_c_down = false;
 		
 		if (draw_cube)
-			cube->draw(pShader, baby_yoda);
+			cube->draw(pShader, test_image);
 		if (draw_plane)
 			plane->draw(pShader, baby_yoda);
 		if (draw_sphere)
@@ -187,8 +188,8 @@ int main()
 	pShader = nullptr; 
 	//delete bunbun;
 	//bunbun = nullptr;
-	delete baby_yoda;
-	baby_yoda = nullptr;
+	delete test_image;
+	test_image = nullptr;
 #pragma endregion
 	return 0;
 }

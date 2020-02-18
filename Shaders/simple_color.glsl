@@ -7,5 +7,8 @@ out vec4 final_color;
 
 void main()
 {
-    final_color = texture(diffuse_texture, final_texture_coodinates);
+    vec4 col =  texture(diffuse_texture, final_texture_coodinates);
+    if(col.a  < 0.0001)
+        discard;
+    final_color = col;
 }
