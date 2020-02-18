@@ -7,16 +7,16 @@ Mesh* Primitives::cube()
 	std::vector<Vertex> cube_vertices
 	{
 		//First plane 
-		Vertex(-0.5f, -0.5f, -0.5f),
-		Vertex(-0.5f, 0.5f, -0.5f),
-		Vertex(0.5f, 0.5, -0.5f),
-		Vertex(0.5f, -0.5f, -0.5f),
+		Vertex(-0.5f, -0.5f, -0.5f, 1.0f, 1.0f),	//Front bottom left
+		Vertex(-0.5f, 0.5f, -0.5f, 1.0f, 0.0f),		//Front top left
+		Vertex(0.5f, 0.5, -0.5f, 0.0f, 0.0f),		//Front top right
+		Vertex(0.5f, -0.5f, -0.5f, 0.0f, 1.0f),		//Front bottom right
 
 		//Second plane 
-		Vertex(-0.5f, -0.5f, 0.5f),
-		Vertex(-0.5f, 0.5f, 0.5f),
-		Vertex(0.5f, 0.5f, 0.5f),
-		Vertex(0.5f, -0.5f, 0.5f)
+		Vertex(-0.5f, -0.5f, 0.5f, 1.0f, 1.0f),		//Back bottom left
+		Vertex(-0.5f, 0.5f, 0.5f, 1.0f, 0.0f),		//Back top left
+		Vertex(0.5f, 0.5f, 0.5f, 0.0f, 0.0f),		//Back top right
+		Vertex(0.5f, -0.5f, 0.5f, 0.0f, 1.0f)		//Back bottom right
 	};
 
 	std::vector<uint> cube_indices
@@ -54,16 +54,16 @@ Mesh* Primitives::plane()
 {
 	std::vector<Vertex> plane_vertices
 	{
-		Vertex(-1.0f, -0.5f, -1.0f),
-		Vertex(-1.0f, -0.5f, 1.0f),
-		Vertex(1.0f, -0.5f, 1.0f),
-		Vertex(1.0f, -0.5f, -1.0f)
+		Vertex(-0.5f,  0.5f, 0.0f, 1.0f, 0.0f),	//Top Left
+		Vertex(0.5f, 0.5f, 0.0f, 0.0f, 0.0f),	//Top right
+		Vertex(-0.5f, -0.5f, 0.0f, 1.0f, 1.0f),	//Bottom left
+		Vertex(0.5f,  -0.5f, 0.0f, 0.0f, 1.0f)	//Bottom right
 	};
 
 	std::vector<uint> plane_indices
 	{
-		0, 1, 3,
-		2, 3, 1
+		1, 2, 0,
+		3, 2, 1
 	};
 	return new Mesh(plane_vertices, plane_indices);
 }

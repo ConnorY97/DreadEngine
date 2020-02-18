@@ -33,7 +33,7 @@ void Mesh::set_up_mesh()
 	//Asking for free memory on the graphics card 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	//Filling the memory with data 
-	glBufferData(GL_ARRAY_BUFFER, verticies.size() * sizeof(glm::vec3), &verticies[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, verticies.size() * sizeof(Vertex), &verticies[0], GL_STATIC_DRAW);
 
 	//The order in which those verticies are connected 
 	//Asking for free memory on the graphics card
@@ -42,8 +42,11 @@ void Mesh::set_up_mesh()
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, index.size() * sizeof(int), &index[0], GL_STATIC_DRAW);
 
 
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), 0);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+
 
 
 
@@ -55,6 +58,13 @@ void Mesh::set_up_mesh()
 
 void Mesh::draw(Shader* shader)
 {
+	glBindVertexArray(VAO);
+	glDrawElements(GL_TRIANGLES, this->index.size(), GL_UNSIGNED_INT, 0);
+}
+
+void Mesh::draw(Shader* shader, Texture* texture)
+{
+	glBindTexture(GL_TEXTURE_2D, texture->texture);
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, this->index.size(), GL_UNSIGNED_INT, 0);
 }

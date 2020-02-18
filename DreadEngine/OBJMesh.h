@@ -3,7 +3,6 @@
 #include "glm.hpp"
 #include <string>
 #include <vector>
-//#include "Texture.h"
 
 namespace aie {
 

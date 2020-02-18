@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 #include "Shader.h"
+#include "Texture.h"
+
 
 using uint = unsigned int;
 
@@ -15,6 +17,14 @@ struct Vertex
 	{
 		position = new_position;
 	}
+	Vertex(float x, float y, float z, float u, float v)
+	{
+		position.x = x;
+		position.y = y;
+		position.z = z;
+		tex_coords.x = u;
+		tex_coords.y = v;
+	}
 	Vertex(float x, float y, float z)
 	{
 		position.x = x;
@@ -22,8 +32,8 @@ struct Vertex
 		position.z = z;
 	}
 	glm::vec3 position;
+	glm::vec2 tex_coords;
 	//glm::vec3 normal;
-	//glm::vec3 tex_coords;
 };
 
 //struct texture
@@ -51,10 +61,12 @@ public:
 		Brief: Draws the shapes with a given shader
 	*/
 	void draw(Shader* shader); 
+	void draw(Shader* shader, Texture* texture); 
+
 
 	//Render Data
 	uint VAO, VBO, IBO; 
-
+	
 	//Functions
 	void set_up_mesh(); 
 

@@ -2,6 +2,7 @@
 #include "glm.hpp"
 #include "gl_core_4_5.h"
 #include "glfw3.h"
+#include "Texture.h"
 #include "glm.hpp"
 #include "ext.hpp"
 #include <fstream>
@@ -12,6 +13,8 @@
 #include "Mesh.h"
 #include "Primitives.h"
 #include "OBJMesh.h"
+#include <crtdbg.h>
+
 
 using uint = unsigned int; 
 
@@ -20,6 +23,9 @@ void print_shader_error_log(uint shader_id);
 int main()
 {
 #pragma region Initialisation and checks 
+	//At start of main()
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+
 	//Initiating the GLFW system
 		//Checking if it worked
 	if (glfwInit() == false)
@@ -60,8 +66,14 @@ int main()
 	Mesh* plane = Primitives::plane(); 
 	Mesh* sphere = Primitives::sphere(2, 100, 100);
 
-	aie::OBJMesh* bunbun = new aie::OBJMesh();
-	bunbun->load("../Models/stanford/Bunny.obj");
+	Texture* baby_yoda = new Texture("../Images/1_mk1-6aYaf_Bes1E3Imhc0A.jpeg"); 
+
+
+
+
+
+	//aie::OBJMesh* bunbun = new aie::OBJMesh();
+	//bunbun->load("../Models/stanford/Bunny.obj");
 
 	//Clearing the screen to a specific colour before starting the game loop 
 	glClearColor(0.0f, 0.0f, 0.0f, 1);
@@ -145,15 +157,15 @@ int main()
 		}
 		else
 			was_c_down = false;
-
+		
 		if (draw_cube)
-			cube->draw(pShader);
+			cube->draw(pShader, baby_yoda);
 		if (draw_plane)
-			plane->draw(pShader);
+			plane->draw(pShader, baby_yoda);
 		if (draw_sphere)
 			sphere->draw(pShader);
 
-		bunbun->draw(); 
+		//bunbun->draw(); 
 #pragma endregion
 		
 		//Updating the monitors display by swapping the renderer back buffer 
@@ -171,6 +183,12 @@ int main()
 	plane = nullptr;
 	delete sphere;
 	sphere = nullptr;
+	delete pShader;
+	pShader = nullptr; 
+	//delete bunbun;
+	//bunbun = nullptr;
+	delete baby_yoda;
+	baby_yoda = nullptr;
 #pragma endregion
 	return 0;
 }
