@@ -41,7 +41,7 @@ bool OBJMesh::load(const char* filename, bool loadTextures /* = true */, bool fl
 
 	// copy materials
 	m_materials.resize(materials.size());
-	int index = 0;
+	//int index = 0;
 	//for (auto& m : materials) {
 	//
 	//	m_materials[index].ambient = glm::vec3(m.ambient[0], m.ambient[1], m.ambient[2]);

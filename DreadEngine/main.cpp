@@ -157,6 +157,7 @@ int main()
 		pShader->setMat4("projection_view_matrix", main_camera.get_projection_view()); 
 		//Bind transform for lighting 
 		pShader->setMat3("normal_matrix", main_camera.get_projection_view()); 
+		pShader->setVec3("camera_position", main_camera.get_projection_view()[3]); 
 
 
 		if (glfwGetKey(pWindow, GLFW_KEY_Z))
