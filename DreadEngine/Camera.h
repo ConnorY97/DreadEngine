@@ -52,10 +52,13 @@ public:
 		//Return: glm::mat4&
 	const glm::mat4& get_world_transform() { return this->world_transform; };
 
+	//Brief: returns the view of the camera 
 	const glm::mat4& get_view() { return this->view_transform; };
 
+	//Brief: Position and rotation of the camera 
 	const glm::mat4& get_projection() { return this->projection_transform; };
 
+	//Brief: settings put together, use for the model transform
 	const glm::mat4& get_projection_view() { return this->projection_view_transform; };
 };
 

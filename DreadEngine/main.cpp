@@ -20,6 +20,13 @@ using uint = unsigned int;
 
 void print_shader_error_log(uint shader_id);
 
+struct Light
+{
+	glm::vec3 direction;
+	glm::vec3 diffuse;
+	glm::vec3 specular;
+};
+
 int main()
 {
 #pragma region Initialisation and checks 
@@ -35,6 +42,8 @@ int main()
 	GLFWwindow* pWindow = glfwCreateWindow(1280, 720, "Computer Graphics", nullptr, nullptr);
 	//Creating the camera
 	FlyCamera main_camera = FlyCamera();
+
+	Light light; 
 
 	//Checking if the window was created
 	if (pWindow == nullptr)
@@ -60,7 +69,7 @@ int main()
 
 #pragma endregion
 
-	Shader* pShader = new Shader("../Shaders/simple_vertex.glsl", "../Shaders/simple_color.glsl");
+	Shader* pShader = new Shader("../Shaders/simple_vertex.shader", "../Shaders/simple_frag.shader");
 
 	Mesh* cube = Primitives::cube();
 	Mesh* plane = Primitives::plane(); 
@@ -68,20 +77,28 @@ int main()
 
 	Texture* test_image = new Texture("../Images/test.jpg"); 
 	Texture* baby_yoda = new Texture("../Images/1_mk1-6aYaf_Bes1E3Imhc0A.jpeg");
+	Texture* world_map = new Texture("../Images/land_ocean_ice_2048.png");
 
 
 
 
 
-	//aie::OBJMesh* bunbun = new aie::OBJMesh();
-	//bunbun->load("../Models/stanford/Bunny.obj");
+	aie::OBJMesh* bunbun = new aie::OBJMesh();
+	bunbun->load("../Models/stanford/Dragon.obj");
 
 	//Clearing the screen to a specific colour before starting the game loop 
-	glClearColor(0.0f, 0.0f, 0.0f, 1);
+	glClearColor(0.5f, 0.5f, 0.5f, 1);
 	//Enable the depth buffer 
 	glEnable(GL_DEPTH_TEST);
 
 	glm::mat4 model = glm::mat4(1.0f);
+	//glm::vec3 light = glm::vec3(0.0f);
+
+	float total_time = 0;
+	glm::vec3 ambient_light; 
+	light.diffuse = { 1, 1, 0 };
+	light.specular = { 1, 1, 0 };
+	ambient_light = { 0.25f, 0.25f, 0.25f }; 
 
 #pragma region Bools
 	bool draw_cube = false;
@@ -111,8 +128,11 @@ int main()
 		previous = now; 
 
 		main_camera.update(delta_time);
+		total_time += delta_time;
 
 		glm::vec4 color = glm::vec4(0.5f); 
+		light.direction = glm::normalize(glm::vec3(glm::cos(total_time * 2), glm::sin(total_time * 2), 0));
+
 		
 #pragma region Drawing
 		if (glfwGetKey(pWindow, GLFW_KEY_1))
@@ -123,9 +143,20 @@ int main()
 			glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
 
 		//Turn shader on 
-		pShader->Use();
-		pShader->setMat4("projection_view_matrix", main_camera.get_projection_view());
-		pShader->setMat4("model_matrix", model);
+		//pShader->Use();
+		//pShader->setMat4("projection_view_matrix", main_camera.get_projection_view());
+		//pShader->setMat4("model_matrix", model);
+		//pShader->setVec3("light_direction", light);
+		//pShader->setVec3("camera_position", glm::vec3(glm::inverse(main_camera.get_view())[3]));
+		pShader->Use(); 
+		pShader->setVec3("Ia", ambient_light);
+		pShader->setVec3("Id", light.diffuse);
+		pShader->setVec3("Is", light.specular); 
+		pShader->setVec3("light_direction", light.direction);
+		//Bind transform 
+		pShader->setMat4("projection_view_matrix", main_camera.get_projection_view()); 
+		//Bind transform for lighting 
+		pShader->setMat3("normal_matrix", main_camera.get_projection_view()); 
 
 
 		if (glfwGetKey(pWindow, GLFW_KEY_Z))
@@ -164,9 +195,9 @@ int main()
 		if (draw_plane)
 			plane->draw(pShader, baby_yoda);
 		if (draw_sphere)
-			sphere->draw(pShader);
+			sphere->draw(pShader, world_map);
 
-		//bunbun->draw(); 
+		bunbun->draw(); 
 #pragma endregion
 		
 		//Updating the monitors display by swapping the renderer back buffer 
@@ -186,10 +217,14 @@ int main()
 	sphere = nullptr;
 	delete pShader;
 	pShader = nullptr; 
-	//delete bunbun;
-	//bunbun = nullptr;
+	delete bunbun;
+	bunbun = nullptr;
 	delete test_image;
 	test_image = nullptr;
+	delete baby_yoda;
+	baby_yoda = nullptr;
+	delete world_map;
+	world_map = nullptr; 
 #pragma endregion
 	return 0;
 }

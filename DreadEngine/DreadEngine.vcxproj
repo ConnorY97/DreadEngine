@@ -165,8 +165,8 @@
     <ClInclude Include="Texture.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Shaders\simple_color.glsl" />
-    <None Include="..\Shaders\simple_vertex.glsl" />
+    <None Include="..\Shaders\simple_frag.shader" />
+    <None Include="..\Shaders\simple_vertex.shader" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

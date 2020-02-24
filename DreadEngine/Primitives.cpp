@@ -7,51 +7,51 @@ Mesh* Primitives::cube()
 	std::vector<Vertex> cube_vertices
 	{
 		//Back plane 
-		/*0*/Vertex(-0.5f, -0.5f, -0.5f, 1.0f, 1.0f),	//back bottom left
-		/*1*/Vertex(-0.5f, 0.5f, -0.5f,  1.0f, 0.0f),	//back top left
+		/*0*/Vertex(-0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 0, 1, 0, 0),	//back bottom left
+		/*1*/Vertex(-0.5f, 0.5f, -0.5f,  1.0f, 0.0f, 0, 1, 0, 0),	//back top left
 		
-		/*2*/Vertex(0.5f, 0.5f, -0.5f, 0.0f, 0.0f),		//back top right
-		/*3*/Vertex(0.5f, -0.5f, -0.5f, 0.0f, 1.0f),	//back bottom right
+		/*2*/Vertex(0.5f, 0.5f, -0.5f, 0.0f, 0.0f, 0, 1, 0, 0),		//back top right
+		/*3*/Vertex(0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0, 1, 0, 0),	//back bottom right
 		//---------------------------------------------------------------------
 		
 		//Front plane 
-		/*4*/Vertex(-0.5f, -0.5f, 0.5f, 0.0f, 1.0f),	//front bottom left
-		/*5*/Vertex(-0.5f, 0.5f, 0.5f, 0.0f, 0.0f),		//front top left
+		/*4*/Vertex(-0.5f, -0.5f, 0.5f, 0.0f, 1.0f, 0, 1, 0, 0),	//front bottom left
+		/*5*/Vertex(-0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 0, 1, 0, 0),		//front top left
 		
-		/*6*/Vertex(0.5f, 0.5f, 0.5f,  1.0f, 0.0f),		//front top right
-		/*7*/Vertex(0.5f, -0.5f, 0.5f, 1.0f, 1.0f),		//front bottom right
+		/*6*/Vertex(0.5f, 0.5f, 0.5f,  1.0f, 0.0f, 0, 1, 0, 0),		//front top right
+		/*7*/Vertex(0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 0, 1, 0, 0),		//front bottom right
 		//---------------------------------------------------------------------
 
 		//Left plane
-		/*8*/Vertex(-0.5f, -0.5f, -0.5f, 0.0f, 1.0f),	//front bottom left
-		/*9*/Vertex(-0.5f, -0.5f, 0.5f, 1.0f, 1.0f),	//back bottom left
+		/*8*/Vertex(-0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0, 1, 0, 0),	//front bottom left
+		/*9*/Vertex(-0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 0, 1, 0, 0),	//back bottom left
 
-		/*10*/Vertex(-0.5f, 0.5f, -0.5f, 0.0f, 0.0f),	//front top left
-		/*11*/Vertex(-0.5f, 0.5, 0.5f, 1.0f, 0.0f),		//back top left
+		/*10*/Vertex(-0.5f, 0.5f, -0.5f, 0.0f, 0.0f, 0, 1, 0, 0),	//front top left
+		/*11*/Vertex(-0.5f, 0.5, 0.5f, 1.0f, 0.0f, 0, 1, 0, 0),		//back top left
 		//---------------------------------------------------------------------
 
 		//Right plane
-		/*12*/Vertex(0.5f, -0.5f, -0.5f, 1.0f, 1.0f),	//front bottom right
-		/*13*/Vertex(0.5f, -0.5f, 0.5f, 0.0f, 1.0f),	//back bottom right
+		/*12*/Vertex(0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 0, 1, 0, 0),	//front bottom right
+		/*13*/Vertex(0.5f, -0.5f, 0.5f, 0.0f, 1.0f, 0, 1, 0, 0),	//back bottom right
 
-		/*14*/Vertex(0.5f, 0.5f, -0.5f, 1.0f, 0.0f),	//front top right
-		/*15*/Vertex(0.5f, 0.5, 0.5f, 0.0f, 0.0f),		//back top right
+		/*14*/Vertex(0.5f, 0.5f, -0.5f, 1.0f, 0.0f, 0, 1, 0, 0),	//front top right
+		/*15*/Vertex(0.5f, 0.5, 0.5f, 0.0f, 0.0f, 0, 1, 0, 0),		//back top right
 		//---------------------------------------------------------------------
 		
 		//Top plane 
-		/*16*/Vertex(-0.5f, 0.5f, -0.5f,  0.0f, 0.0f),	//back top left
-		/*17*/Vertex(-0.5f, 0.5f, 0.5f, 0.0f, 1.0f),	//front top left
+		/*16*/Vertex(-0.5f, 0.5f, -0.5f,  0.0f, 0.0f, 0, 1, 0, 0),	//back top left
+		/*17*/Vertex(-0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0, 1, 0, 0),	//front top left
 
-		/*18*/Vertex(0.5f, 0.5f, 0.5f,  1.0f, 1.0f),	//front top right
-		/*19*/Vertex(0.5f, 0.5f, -0.5f, 1.0f, 0.0f),	//back top right
+		/*18*/Vertex(0.5f, 0.5f, 0.5f,  1.0f, 1.0f, 0, 1, 0, 0),	//front top right
+		/*19*/Vertex(0.5f, 0.5f, -0.5f, 1.0f, 0.0f, 0, 1, 0, 0),	//back top right
 		//---------------------------------------------------------------------
 
 		//Bottom plane
-		/*20*/Vertex(-0.5f, -0.5f, -0.5f, 0.0f, 1.0f),	//back bottom left
-		/*21*/Vertex(-0.5f, -0.5f, 0.5f, 0.0f, 0.0f),	//front bottom left
+		/*20*/Vertex(-0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0, 1, 0, 0),	//back bottom left
+		/*21*/Vertex(-0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 0, 1, 0, 0),	//front bottom left
 
-		/*22*/Vertex(0.5f, -0.5f, 0.5f, 1.0f, 0.0f),	//front bottom right
-		/*23*/Vertex(0.5f, -0.5f, -0.5f, 1.0f, 1.0f),	//back bottom right
+		/*22*/Vertex(0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0, 1, 0, 0),	//front bottom right
+		/*23*/Vertex(0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 0, 1, 0, 0),	//back bottom right
 	};
 
 	std::vector<uint> cube_indices
@@ -90,16 +90,16 @@ Mesh* Primitives::plane()
 {
 	std::vector<Vertex> plane_vertices
 	{
-		Vertex(-0.5f,  0.5f, 0.0f, 1.0f, 0.0f),	//Top Left
-		Vertex(0.5f, 0.5f, 0.0f, 0.0f, 0.0f),	//Top right
-		Vertex(-0.5f, -0.5f, 0.0f, 1.0f, 1.0f),	//Bottom left
-		Vertex(0.5f,  -0.5f, 0.0f, 0.0f, 1.0f)	//Bottom right
+		Vertex(-0.5f,  0.0f, -0.5f, 1.0f, 0.0f, 0, 1, 0, 0),	//Top Left
+		Vertex(0.5f, 0.0f, -0.5f, 0.0f, 0.0f, 0, 1, 0, 0),	//Top right
+		Vertex(-0.5f, 0.0f, 0.5f, 1.0f, 1.0f, 0, 1, 0, 0),	//Bottom left
+		Vertex(0.5f,  0.0f, 0.5f, 0.0f, 1.0f, 0, 1, 0, 0)	//Bottom right
 	};
 
 	std::vector<uint> plane_indices
 	{
-		1, 2, 0,
-		3, 2, 1
+		0, 2, 1,
+		1, 2, 3
 	};
 	return new Mesh(plane_vertices, plane_indices);
 }
@@ -107,6 +107,7 @@ Mesh* Primitives::plane()
 Mesh* Primitives::sphere(float radius, int sector_count, float stack_count)
 {	
 	std::vector<Vertex> sphere_vertices;
+	std::vector<glm::vec2> tex_coords; 
 	//std::vector<float> sphere_indeces;
 	float x, y, z, xy;                              // vertex position
 	float nx, ny, nz, lengthInv = 1.0f / radius;    // vertex normal
@@ -131,7 +132,7 @@ Mesh* Primitives::sphere(float radius, int sector_count, float stack_count)
 			// vertex position (x, y, z)
 			x = xy * cosf(sectorAngle);             // r * cos(u) * cos(v)
 			y = xy * sinf(sectorAngle);             // r * cos(u) * sin(v)
-			sphere_vertices.push_back(Vertex(x, y, z));
+			//sphere_vertices.push_back(Vertex(x, y, z));
 			//sphere_vertices.push_back(y);
 			//sphere_vertices.push_back(z);
 
@@ -143,11 +144,11 @@ Mesh* Primitives::sphere(float radius, int sector_count, float stack_count)
 			//normals.push_back(ny);
 			//normals.push_back(nz);
 
-			//// vertex tex coord (s, t) range between [0, 1]
-			//s = (float)j / sectorCount;
-			//t = (float)i / stackCount;
-			//texCoords.push_back(s);
-			//texCoords.push_back(t);
+			// vertex tex coord (s, t) range between [0, 1]
+			s = (float)j / stack_count;
+			t = (float)i / stack_count;
+			//tex_coords.push_back(glm::vec2(s, t));
+			sphere_vertices.push_back(Vertex(x, y, z, s, t)); 
 		}
 	}
 

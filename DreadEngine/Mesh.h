@@ -13,9 +13,12 @@ using uint = unsigned int;
 */
 struct Vertex
 {	
+#pragma region Constructors
 	Vertex(glm::vec3 new_position)
 	{
 		position = new_position;
+		tex_coords = glm::vec2(0);
+		normal = glm::vec4(0);
 	}
 	Vertex(float x, float y, float z, float u, float v)
 	{
@@ -24,16 +27,32 @@ struct Vertex
 		position.z = z;
 		tex_coords.x = u;
 		tex_coords.y = v;
+		normal = glm::vec4(0);
 	}
 	Vertex(float x, float y, float z)
 	{
 		position.x = x;
 		position.y = y;
 		position.z = z;
+		tex_coords = glm::vec2(0);
+		normal = glm::vec4(0);
 	}
+	Vertex(float x, float y, float z, float u, float v, float nx, float ny, float nz, float nw)
+	{
+		position.x = x;
+		position.y = y;
+		position.z = z;
+		tex_coords.x = u;
+		tex_coords.y = v;
+		normal.x = nx;
+		normal.y = ny;
+		normal.z = nz;
+		normal.w = nw;
+	}
+#pragma endregion
 	glm::vec3 position;
+	glm::vec4 normal;
 	glm::vec2 tex_coords;
-	//glm::vec3 normal;
 };
 
 //struct texture
