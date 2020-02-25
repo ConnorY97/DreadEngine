@@ -16,22 +16,22 @@
 //Classic Phong fragent shader
 #version 450
 
-//in vec4 v_position;
+in vec4 v_position;
 in vec3 v_normal; 
 
 //uniform sampler2D diffuse_texture; 
 
-//uniform vec3 Ka;				//Ambient mat colour
-//uniform vec3 Kd;				//Diffuse mat colour
-//uniform vec3 Ks;				//Specular mat colour
-//uniform float specularPower;	//Mat specular power
+uniform vec3 Ka;				//Ambient mat colour
+uniform vec3 Kd;				//Diffuse mat colour
+uniform vec3 Ks;				//Specular mat colour
+uniform float specular_power;	//Mat specular power
 
 uniform vec3 Ia;				//Ambient light colour
 uniform vec3 Id;				//Diffuse light colour
 uniform vec3 Is;				//Specular light colour 
 uniform vec3 light_direction;
 
-//uniform vec3 camera_position; 
+uniform vec3 camera_position; 
 
 //in vec2 final_tecture_coordinates;
 out vec4 frag_colour; 
@@ -47,19 +47,19 @@ void main()
 
 
 	//Calculate view vector and reflection vector
-	//vec3 V = normalize(camera_position - v_position.xyz);
-	//vec3 R = reflect(L, N);
+	vec3 V = normalize(camera_position - v_position.xyz);
+	vec3 R = reflect(L, N);
 
 	//Calculate specular term
-	//float specular_term = pow(max(0, dot(R, V)), specular_power); 
+	float specular_term = pow(max(0, dot(R, V)), specular_power); 
 
 	//Calculate each colour property
-	//vec3 ambient = Ia * Ka;
-	vec3 diffuse = Id * lambert_term;
-	//vec3 specular = Is * Ks * specularPower;
+	vec3 ambient = Ia * Ka;
+	vec3 diffuse = Id * Kd * lambert_term;
+	vec3 specular = Is * Ks * specular_term;
 
 	//frag_colour = vec4(ambient + diffuse + specular, 1);
 	//frag_colour = vec4(light_direction, 1);
 	//frag_colour = vec4(v_normal, 1);
-	frag_colour = vec4(diffuse, 1); 
+	frag_colour = vec4(ambient + diffuse + specular, 1); 
 }

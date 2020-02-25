@@ -14,6 +14,7 @@
 #include "Primitives.h"
 #include "OBJMesh.h"
 #include <crtdbg.h>
+#include "Material.h"
 
 
 using uint = unsigned int; 
@@ -78,8 +79,6 @@ int main()
 	Texture* test_image = new Texture("../Images/test.jpg"); 
 	Texture* baby_yoda = new Texture("../Images/1_mk1-6aYaf_Bes1E3Imhc0A.jpeg");
 	Texture* world_map = new Texture("../Images/land_ocean_ice_2048.png");
-
-
 
 
 
@@ -149,10 +148,17 @@ int main()
 		//pShader->setVec3("light_direction", light);
 		//pShader->setVec3("camera_position", glm::vec3(glm::inverse(main_camera.get_view())[3]));
 		pShader->Use(); 
+		//Set light values 
 		pShader->setVec3("Ia", ambient_light);
 		pShader->setVec3("Id", light.diffuse);
 		pShader->setVec3("Is", light.specular); 
 		pShader->setVec3("light_direction", light.direction);
+		//Set material values 
+
+		pShader->setVec3("Ka", glm::vec3(bunbun->object_material[0].ambient[0], bunbun->object_material[0].ambient[1], bunbun->object_material[0].ambient[2]));
+		pShader->setVec3("Kd", glm::vec3(bunbun->object_material[0].diffuse[0], bunbun->object_material[0].diffuse[1], bunbun->object_material[0].diffuse[2]));
+		pShader->setVec3("Ks", glm::vec3(bunbun->object_material[0].specular[0], bunbun->object_material[0].specular[1], bunbun->object_material[0].specular[2]));
+		pShader->setFloat("specular_power", bunbun->object_material[0].specularPower); 
 		//Bind transform 
 		pShader->setMat4("projection_view_matrix", main_camera.get_projection_view()); 
 		//Bind transform for lighting 
