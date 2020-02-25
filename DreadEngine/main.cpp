@@ -70,7 +70,8 @@ int main()
 
 #pragma endregion
 
-	Shader* pShader = new Shader("../Shaders/simple_vertex.shader", "../Shaders/simple_frag.shader");
+	Shader* obj_shader = new Shader("../Shaders/simple_vertex.shader", "../Shaders/simple_frag.shader");
+	Shader* primitive_shader = new Shader("../Shaders/textured_vert_shader.glsl", "../Shaders/textured_frag_shader.glsl");
 
 	Mesh* cube = Primitives::cube();
 	Mesh* plane = Primitives::plane(); 
@@ -91,12 +92,11 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 
 	glm::mat4 model = glm::mat4(1.0f);
-	//glm::vec3 light = glm::vec3(0.0f);
 
 	float total_time = 0;
 	glm::vec3 ambient_light; 
-	light.diffuse = { 1, 1, 0 };
-	light.specular = { 1, 1, 0 };
+	light.diffuse = { 1, 1, 1 };
+	light.specular = { 1, 1, 1 };
 	ambient_light = { 0.25f, 0.25f, 0.25f }; 
 
 #pragma region Bools
@@ -133,6 +133,33 @@ int main()
 		light.direction = glm::normalize(glm::vec3(glm::cos(total_time * 2), glm::sin(total_time * 2), 0));
 
 		
+
+		
+		//Turn shader on 
+		obj_shader->Use(); 
+		//Set light values 
+		obj_shader->setMat4("model_matrix", model); 
+		obj_shader->setVec3("Ia", ambient_light);
+		obj_shader->setVec3("Id", light.diffuse);
+		obj_shader->setVec3("Is", light.specular); 
+		obj_shader->setVec3("light_direction", light.direction);
+		//Set material values 
+		obj_shader->setVec3("Ka", bunbun->object_material[0].ambient); 
+		obj_shader->setVec3("Kd", bunbun->object_material[0].diffuse); 
+		obj_shader->setVec3("Ks", bunbun->object_material[0].specular); 
+		obj_shader->setFloat("specular_power", bunbun->object_material[0].specularPower); 
+		//Bind transform 
+		obj_shader->setMat4("projection_view_matrix", main_camera.get_projection_view()); 
+		//Bind transform for lighting 
+		obj_shader->setMat3("normal_matrix", main_camera.get_projection_view()); 
+		obj_shader->setVec3("camera_position", main_camera.get_projection_view()[3]); 
+
+		primitive_shader->Use(); 
+		primitive_shader->setMat4("projection_view_matrix", main_camera.get_projection_view());
+		primitive_shader->setMat4("model_matrix", model); 
+
+		
+
 #pragma region Drawing
 		if (glfwGetKey(pWindow, GLFW_KEY_1))
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -140,31 +167,6 @@ int main()
 			glPolygonMode(GL_FRONT, GL_FILL);
 		if (glfwGetKey(pWindow, GLFW_KEY_3))
 			glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
-
-		//Turn shader on 
-		//pShader->Use();
-		//pShader->setMat4("projection_view_matrix", main_camera.get_projection_view());
-		//pShader->setMat4("model_matrix", model);
-		//pShader->setVec3("light_direction", light);
-		//pShader->setVec3("camera_position", glm::vec3(glm::inverse(main_camera.get_view())[3]));
-		pShader->Use(); 
-		//Set light values 
-		pShader->setVec3("Ia", ambient_light);
-		pShader->setVec3("Id", light.diffuse);
-		pShader->setVec3("Is", light.specular); 
-		pShader->setVec3("light_direction", light.direction);
-		//Set material values 
-
-		pShader->setVec3("Ka", glm::vec3(bunbun->object_material[0].ambient[0], bunbun->object_material[0].ambient[1], bunbun->object_material[0].ambient[2]));
-		pShader->setVec3("Kd", glm::vec3(bunbun->object_material[0].diffuse[0], bunbun->object_material[0].diffuse[1], bunbun->object_material[0].diffuse[2]));
-		pShader->setVec3("Ks", glm::vec3(bunbun->object_material[0].specular[0], bunbun->object_material[0].specular[1], bunbun->object_material[0].specular[2]));
-		pShader->setFloat("specular_power", bunbun->object_material[0].specularPower); 
-		//Bind transform 
-		pShader->setMat4("projection_view_matrix", main_camera.get_projection_view()); 
-		//Bind transform for lighting 
-		pShader->setMat3("normal_matrix", main_camera.get_projection_view()); 
-		pShader->setVec3("camera_position", main_camera.get_projection_view()[3]); 
-
 
 		if (glfwGetKey(pWindow, GLFW_KEY_Z))
 		{
@@ -198,13 +200,13 @@ int main()
 			was_c_down = false;
 		
 		if (draw_cube)
-			cube->draw(pShader, test_image);
+			cube->draw(primitive_shader, test_image);
 		if (draw_plane)
-			plane->draw(pShader, baby_yoda);
+			plane->draw(primitive_shader, baby_yoda);
 		if (draw_sphere)
-			sphere->draw(pShader, world_map);
+			sphere->draw(primitive_shader, world_map);
 
-		bunbun->draw(); 
+		//bunbun->draw(); 
 #pragma endregion
 		
 		//Updating the monitors display by swapping the renderer back buffer 
@@ -222,8 +224,8 @@ int main()
 	plane = nullptr;
 	delete sphere;
 	sphere = nullptr;
-	delete pShader;
-	pShader = nullptr; 
+	delete obj_shader;
+	obj_shader = nullptr; 
 	delete bunbun;
 	bunbun = nullptr;
 	delete test_image;
@@ -232,6 +234,8 @@ int main()
 	baby_yoda = nullptr;
 	delete world_map;
 	world_map = nullptr; 
+	delete primitive_shader;
+	primitive_shader = nullptr; 
 #pragma endregion
 	return 0;
 }

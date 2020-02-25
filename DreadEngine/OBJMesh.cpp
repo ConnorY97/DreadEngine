@@ -45,23 +45,17 @@ bool OBJMesh::load(const char* filename, bool loadTextures /* = true */, bool fl
 	Material temp;
 	for (auto& m : materials)
 	{
-		printf("Index: %i", index);
-	/*	object_material.ambient = glm::vec3(materials[0].ambient[0], materials[1].ambient[1], materials[2].ambient[2]);
-		object_material.diffuse = glm::vec3(materials[0].diffuse[0], materials[1].diffuse[1], materials[2].diffuse[2]);
-		object_material.specular = glm::vec3(materials[0].specular[0], materials[1].specular[1], materials[2].specular[2]);
-		object_material.specularPower = materials[0].shininess;*/
 		temp.ambient = glm::vec3(m.ambient[0], m.ambient[1], m.ambient[2]);
 		temp.diffuse = glm::vec3(m.diffuse[0], m.diffuse[1], m.diffuse[2]);
 		temp.specular = glm::vec3(m.specular[0], m.specular[1], m.specular[2]);
 		temp.emissive = glm::vec3(m.emission[0], m.emission[1], m.emission[2]);
 		temp.specularPower = m.shininess;
+		temp.opacity = m.dissolve; 
 		object_material.push_back(temp);
 
 		index++;
 	}
 
-	printf("%f | %f | %f", object_material[0].ambient[0], object_material[0].diffuse[0], object_material[0].specular[0]);
-	
 	//int index = 0;
 	//for (auto& m : materials) {
 	//

@@ -7,35 +7,35 @@ Mesh* Primitives::cube()
 	std::vector<Vertex> cube_vertices
 	{
 		//Back plane 
-		/*0*/Vertex(-0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 0, 1, 0, 0),	//back bottom left
-		/*1*/Vertex(-0.5f, 0.5f, -0.5f,  1.0f, 0.0f, 0, 1, 0, 0),	//back top left
+		/*0*/Vertex(-0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 0, 0, -1, 0),	//back bottom left
+		/*1*/Vertex(-0.5f, 0.5f, -0.5f,  1.0f, 0.0f, 0, 0, -1, 0),	//back top left
 		
-		/*2*/Vertex(0.5f, 0.5f, -0.5f, 0.0f, 0.0f, 0, 1, 0, 0),		//back top right
-		/*3*/Vertex(0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0, 1, 0, 0),	//back bottom right
+		/*2*/Vertex(0.5f, 0.5f, -0.5f, 0.0f, 0.0f, 0, 0, -1, 0),		//back top right
+		/*3*/Vertex(0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0, 0, -1, 0),	//back bottom right
 		//---------------------------------------------------------------------
 		
 		//Front plane 
-		/*4*/Vertex(-0.5f, -0.5f, 0.5f, 0.0f, 1.0f, 0, 1, 0, 0),	//front bottom left
-		/*5*/Vertex(-0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 0, 1, 0, 0),		//front top left
+		/*4*/Vertex(-0.5f, -0.5f, 0.5f, 0.0f, 1.0f, 0, 0, 1, 0),	//front bottom left
+		/*5*/Vertex(-0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 0, 0, 1, 0),		//front top left
 		
-		/*6*/Vertex(0.5f, 0.5f, 0.5f,  1.0f, 0.0f, 0, 1, 0, 0),		//front top right
-		/*7*/Vertex(0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 0, 1, 0, 0),		//front bottom right
+		/*6*/Vertex(0.5f, 0.5f, 0.5f,  1.0f, 0.0f, 0, 0, 1, 0),		//front top right
+		/*7*/Vertex(0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 0, 0, 1, 0),		//front bottom right
 		//---------------------------------------------------------------------
 
 		//Left plane
-		/*8*/Vertex(-0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0, 1, 0, 0),	//front bottom left
-		/*9*/Vertex(-0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 0, 1, 0, 0),	//back bottom left
+		/*8*/Vertex(-0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 1, 0, 0, 0),	//front bottom left
+		/*9*/Vertex(-0.5f, -0.5f, 0.5f, 1.0f, 1.0f, 1, 0, 0, 0),	//back bottom left
 
-		/*10*/Vertex(-0.5f, 0.5f, -0.5f, 0.0f, 0.0f, 0, 1, 0, 0),	//front top left
-		/*11*/Vertex(-0.5f, 0.5, 0.5f, 1.0f, 0.0f, 0, 1, 0, 0),		//back top left
+		/*10*/Vertex(-0.5f, 0.5f, -0.5f, 0.0f, 0.0f, 1, 0, 0, 0),	//front top left
+		/*11*/Vertex(-0.5f, 0.5, 0.5f, 1.0f, 0.0f, 1, 0, 0, 0),		//back top left
 		//---------------------------------------------------------------------
 
 		//Right plane
-		/*12*/Vertex(0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 0, 1, 0, 0),	//front bottom right
-		/*13*/Vertex(0.5f, -0.5f, 0.5f, 0.0f, 1.0f, 0, 1, 0, 0),	//back bottom right
+		/*12*/Vertex(0.5f, -0.5f, -0.5f, 1.0f, 1.0f, -1, 0, 0, 0),	//front bottom right
+		/*13*/Vertex(0.5f, -0.5f, 0.5f, 0.0f, 1.0f, -1, 0, 0, 0),	//back bottom right
 
-		/*14*/Vertex(0.5f, 0.5f, -0.5f, 1.0f, 0.0f, 0, 1, 0, 0),	//front top right
-		/*15*/Vertex(0.5f, 0.5, 0.5f, 0.0f, 0.0f, 0, 1, 0, 0),		//back top right
+		/*14*/Vertex(0.5f, 0.5f, -0.5f, 1.0f, 0.0f, -1, 0, 0, 0),	//front top right
+		/*15*/Vertex(0.5f, 0.5, 0.5f, 0.0f, 0.0f, -1, 0, 0, 0),		//back top right
 		//---------------------------------------------------------------------
 		
 		//Top plane 
@@ -47,11 +47,11 @@ Mesh* Primitives::cube()
 		//---------------------------------------------------------------------
 
 		//Bottom plane
-		/*20*/Vertex(-0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0, 1, 0, 0),	//back bottom left
-		/*21*/Vertex(-0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 0, 1, 0, 0),	//front bottom left
+		/*20*/Vertex(-0.5f, -0.5f, -0.5f, 0.0f, 1.0f, 0, -1, 0, 0),	//back bottom left
+		/*21*/Vertex(-0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 0, -1, 0, 0),	//front bottom left
 
-		/*22*/Vertex(0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0, 1, 0, 0),	//front bottom right
-		/*23*/Vertex(0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 0, 1, 0, 0),	//back bottom right
+		/*22*/Vertex(0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0, -1, 0, 0),	//front bottom right
+		/*23*/Vertex(0.5f, -0.5f, -0.5f, 1.0f, 1.0f, 0, -1, 0, 0),	//back bottom right
 	};
 
 	std::vector<uint> cube_indices

@@ -39,7 +39,7 @@ out vec4 frag_colour;
 void main()
 {
 	//Ensure normal and light direction are normalised 
-	vec3 N = normalize(v_normal);
+	vec3 N = normalize(-v_normal);
 	vec3 L = normalize(light_direction);
 
 	//Calculate lambert term (negate light direction)
