@@ -74,4 +74,5 @@ void Mesh::draw(Shader* shader, Texture* texture)
 	glBindTexture(GL_TEXTURE_2D, texture->texture);
 	glBindVertexArray(VAO);
 	glDrawElements(GL_TRIANGLES, this->index.size(), GL_UNSIGNED_INT, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
 }

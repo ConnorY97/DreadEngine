@@ -44,7 +44,8 @@ int main()
 	//Creating the camera
 	FlyCamera main_camera = FlyCamera();
 
-	Light light; 
+	Light light01; 
+	Light light02;
 
 	//Checking if the window was created
 	if (pWindow == nullptr)
@@ -92,11 +93,15 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 
 	glm::mat4 model = glm::mat4(1.0f);
+	light02.direction = glm::vec3(0.0f, 1.0f, 0.0f);
+
 
 	float total_time = 0;
 	glm::vec3 ambient_light; 
-	light.diffuse = { 1, 1, 1 };
-	light.specular = { 1, 1, 1 };
+	light01.diffuse = { 1, 1, 0 };
+	light01.specular = { 1, 1, 0 };
+	light02.diffuse = { 0.5, 0.5, 0 };
+	light02.specular = { 0.5, 0.5, 0 }; 
 	ambient_light = { 0.25f, 0.25f, 0.25f }; 
 
 #pragma region Bools
@@ -130,7 +135,7 @@ int main()
 		total_time += delta_time;
 
 		glm::vec4 color = glm::vec4(0.5f); 
-		light.direction = glm::normalize(glm::vec3(glm::cos(total_time * 2), glm::sin(total_time * 2), 0));
+		light01.direction = glm::normalize(glm::vec3(glm::cos(total_time * 2), glm::sin(total_time * 2), 0));
 
 		
 
@@ -140,9 +145,9 @@ int main()
 		//Set light values 
 		obj_shader->setMat4("model_matrix", model); 
 		obj_shader->setVec3("Ia", ambient_light);
-		obj_shader->setVec3("Id", light.diffuse);
-		obj_shader->setVec3("Is", light.specular); 
-		obj_shader->setVec3("light_direction", light.direction);
+		obj_shader->setVec3("Id", light01.diffuse);
+		obj_shader->setVec3("Is", light01.specular); 
+		obj_shader->setVec3("light_direction", light01.direction);
 		//Set material values 
 		obj_shader->setVec3("Ka", bunbun->object_material[0].ambient); 
 		obj_shader->setVec3("Kd", bunbun->object_material[0].diffuse); 
@@ -154,9 +159,12 @@ int main()
 		obj_shader->setMat3("normal_matrix", main_camera.get_projection_view()); 
 		obj_shader->setVec3("camera_position", main_camera.get_projection_view()[3]); 
 
-		primitive_shader->Use(); 
-		primitive_shader->setMat4("projection_view_matrix", main_camera.get_projection_view());
-		primitive_shader->setMat4("model_matrix", model); 
+		//bunbun->draw(); 
+
+
+		//primitive_shader->Use(); 
+		//primitive_shader->setMat4("projection_view_matrix", main_camera.get_projection_view());
+		//primitive_shader->setMat4("model_matrix", model); 
 
 		
 
@@ -199,15 +207,14 @@ int main()
 		else
 			was_c_down = false;
 		
-		if (draw_cube)
-			cube->draw(primitive_shader, test_image);
-		if (draw_plane)
-			plane->draw(primitive_shader, baby_yoda);
-		if (draw_sphere)
-			sphere->draw(primitive_shader, world_map);
 
-		//bunbun->draw(); 
 #pragma endregion
+		if (draw_cube)
+			cube->draw(obj_shader, test_image);
+		if (draw_plane)
+			plane->draw(obj_shader, baby_yoda);
+		if (draw_sphere)
+			sphere->draw(obj_shader, world_map);
 		
 		//Updating the monitors display by swapping the renderer back buffer 
 		glfwSwapBuffers(pWindow);
