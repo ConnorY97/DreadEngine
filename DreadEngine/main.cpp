@@ -159,7 +159,7 @@ int main()
 		obj_shader->setMat3("normal_matrix", main_camera.get_projection_view()); 
 		obj_shader->setVec3("camera_position", main_camera.get_projection_view()[3]); 
 
-		//bunbun->draw(); 
+		bunbun->draw(); 
 
 
 		//primitive_shader->Use(); 
