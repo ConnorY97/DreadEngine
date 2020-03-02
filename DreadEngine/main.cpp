@@ -171,9 +171,6 @@ int main()
 
 		bunbun->draw(); 
 
-
-		
-
 #pragma region Drawing
 		if (glfwGetKey(pWindow, GLFW_KEY_1))
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
