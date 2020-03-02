@@ -72,16 +72,20 @@ int main()
 #pragma endregion
 
 	Shader* obj_shader = new Shader("../Shaders/simple_vertex.shader", "../Shaders/simple_frag.shader");
-	Shader* primitive_shader = new Shader("../Shaders/textured_vert_shader.glsl", "../Shaders/textured_frag_shader.glsl");
-
+	
 	Mesh* cube = Primitives::cube();
+	glm::mat4 cube_model = glm::mat4(1); 
 	Mesh* plane = Primitives::plane(); 
+	glm::mat4 plane_model = glm::mat4(1);
 	Mesh* sphere = Primitives::sphere(2, 100, 100);
 
 	Texture* test_image = new Texture("../Images/test.jpg"); 
 	Texture* baby_yoda = new Texture("../Images/1_mk1-6aYaf_Bes1E3Imhc0A.jpeg");
 	Texture* world_map = new Texture("../Images/land_ocean_ice_2048.png");
 
+
+	cube_model = glm::translate(cube_model, glm::vec3(5.0f, 0, 0));
+	plane_model = glm::translate(plane_model, glm::vec3(-5.0f, 0, 0));
 
 
 	aie::OBJMesh* bunbun = new aie::OBJMesh();
@@ -92,7 +96,8 @@ int main()
 	//Enable the depth buffer 
 	glEnable(GL_DEPTH_TEST);
 
-	glm::mat4 model = glm::mat4(1.0f);
+	glm::mat4 model = glm::mat4(1);
+	
 	light02.direction = glm::vec3(0.0f, 1.0f, 0.0f);
 
 
@@ -100,7 +105,7 @@ int main()
 	glm::vec3 ambient_light; 
 	light01.diffuse = { 1, 1, 0 };
 	light01.specular = { 1, 1, 0 };
-	light02.diffuse = { 0.5, 0.5, 0 };
+	light02.diffuse = { 0, 0, 1 };
 	light02.specular = { 0.5, 0.5, 0 }; 
 	ambient_light = { 0.25f, 0.25f, 0.25f }; 
 
@@ -138,16 +143,21 @@ int main()
 		light01.direction = glm::normalize(glm::vec3(glm::cos(total_time * 2), glm::sin(total_time * 2), 0));
 
 		
-
+		//model = glm::translate(model, glm::vec3(0.01f, 0, 0));
 		
 		//Turn shader on 
 		obj_shader->Use(); 
-		//Set light values 
+		//Set light01 values 
 		obj_shader->setMat4("model_matrix", model); 
 		obj_shader->setVec3("Ia", ambient_light);
 		obj_shader->setVec3("Id", light01.diffuse);
 		obj_shader->setVec3("Is", light01.specular); 
 		obj_shader->setVec3("light_direction", light01.direction);
+		//Set light02 values 
+		obj_shader->setVec3("Ia2", ambient_light);
+		obj_shader->setVec3("Id2", light02.diffuse);
+		obj_shader->setVec3("Is2", light02.specular);
+		obj_shader->setVec3("light02_direction", light02.direction);
 		//Set material values 
 		obj_shader->setVec3("Ka", bunbun->object_material[0].ambient); 
 		obj_shader->setVec3("Kd", bunbun->object_material[0].diffuse); 
@@ -159,12 +169,8 @@ int main()
 		obj_shader->setMat3("normal_matrix", main_camera.get_projection_view()); 
 		obj_shader->setVec3("camera_position", main_camera.get_projection_view()[3]); 
 
-		//bunbun->draw(); 
+		bunbun->draw(); 
 
-
-		//primitive_shader->Use(); 
-		//primitive_shader->setMat4("projection_view_matrix", main_camera.get_projection_view());
-		//primitive_shader->setMat4("model_matrix", model); 
 
 		
 
@@ -210,9 +216,9 @@ int main()
 
 #pragma endregion
 		if (draw_cube)
-			cube->draw(obj_shader, test_image);
+			cube->draw(cube_model, obj_shader, test_image);
 		if (draw_plane)
-			plane->draw(obj_shader, baby_yoda);
+			plane->draw(plane_model, obj_shader, baby_yoda);
 		if (draw_sphere)
 			sphere->draw(obj_shader, world_map);
 		
@@ -241,8 +247,6 @@ int main()
 	baby_yoda = nullptr;
 	delete world_map;
 	world_map = nullptr; 
-	delete primitive_shader;
-	primitive_shader = nullptr; 
 #pragma endregion
 	return 0;
 }

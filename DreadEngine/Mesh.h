@@ -81,6 +81,7 @@ public:
 	*/
 	void draw(Shader* shader); 
 	void draw(Shader* shader, Texture* texture); 
+	void draw(glm::mat4 model, Shader* shader, Texture* texture); 
 
 
 	//Render Data

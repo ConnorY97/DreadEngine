@@ -1,19 +1,3 @@
-//#version 450 // Vert shader
-//
-//layout(location = 0) in vec3 local_position;
-//layout(location = 1) in vec2 texture_coordinates;
-//
-//uniform mat4 projection_view_matrix;
-//uniform mat4 model_matrix;
-//
-//out vec2 final_texture_coodinates;
-//
-//void main()
-//{
-//    final_texture_coodinates = texture_coordinates;
-//    gl_Position = (projection_view_matrix * model_matrix) * vec4(local_position, 1);
-//}
-
 //Classic Phong vertex shader
 #version 450
 
@@ -39,5 +23,6 @@ void main()
 	final_texture_coodinates = texture_coordinates;
 	v_position = model_matrix * vec4(local_position, 1);
 	v_normal = normal_matrix * normal.xyz;
-	gl_Position = projection_view_matrix * vec4(local_position, 1);
+	//gl_Position = projection_view_matrix * vec4(local_position, 1);
+	gl_Position = projection_view_matrix * v_position; 
 }
