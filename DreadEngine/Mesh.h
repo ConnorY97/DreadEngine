@@ -75,6 +75,7 @@ public:
 	*/
 	Mesh(std::vector<Vertex> verticies, std::vector<uint> index/*, std::vector<texture> textures*/);
 	~Mesh(); 
+	Mesh(uint vao, uint vbo, uint ibo, uint index_count); 
 
 	/*
 		Brief: Draws the shapes with a given shader
@@ -82,10 +83,13 @@ public:
 	void draw(Shader* shader); 
 	void draw(Shader* shader, Texture* texture); 
 	void draw(glm::mat4 model, Shader* shader, Texture* texture); 
+	void draw(); 
 
 
 	//Render Data
 	uint VAO, VBO, IBO; 
+
+	uint index_count;
 	
 	//Functions
 	void set_up_mesh(); 

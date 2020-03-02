@@ -3,8 +3,14 @@
 #include "glm.hpp"
 #include <string>
 #include <vector>
+#include "Texture.h"
 
 namespace aie {
+	struct MeshChunk {
+		unsigned int	vao, vbo, ibo;
+		unsigned int	indexCount;
+		int				materialID;
+	};
 
 // a simple triangle mesh wrapper
 class OBJMesh {
@@ -51,7 +57,7 @@ public:
 	bool load(const char* filename, bool loadTextures = true, bool flipTextureV = false);
 
 	// allow option to draw as patches for tessellation
-	void draw(bool usePatches = false);
+	void draw(Texture* diffuse, Texture* normal, bool usePatches = false);
 
 	// access to the filename that was loaded
 	const std::string& getFilename() const { return m_filename; }
@@ -64,11 +70,7 @@ public:
 
 	void calculateTangents(std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices);
 
-	struct MeshChunk {
-		unsigned int	vao, vbo, ibo;
-		unsigned int	indexCount;
-		int				materialID;
-	};
+	
 
 	std::string				m_filename;
 	std::vector<MeshChunk>	m_meshChunks;

@@ -1,6 +1,6 @@
 #include <iostream>
-#include "glm.hpp"
 #include "gl_core_4_5.h"
+#include "glm.hpp"
 #include "glfw3.h"
 #include "Texture.h"
 #include "glm.hpp"
@@ -15,11 +15,14 @@
 #include "OBJMesh.h"
 #include <crtdbg.h>
 #include "Material.h"
+#include "geometric.hpp"
 
 
 using uint = unsigned int; 
 
 void print_shader_error_log(uint shader_id);
+
+void draw(Mesh* mesh, Shader* shader, Texture* diffuse, Texture* normal);
 
 struct Light
 {
@@ -79,13 +82,19 @@ int main()
 	glm::mat4 plane_model = glm::mat4(1);
 	Mesh* sphere = Primitives::sphere(2, 100, 100);
 
-	Texture* test_image = new Texture("../Images/test.jpg"); 
+	Texture* test_image = new Texture("../Images/ChunkyWetGravelAndDirt_albedo.png"); 
 	Texture* baby_yoda = new Texture("../Images/1_mk1-6aYaf_Bes1E3Imhc0A.jpeg");
 	Texture* world_map = new Texture("../Images/land_ocean_ice_2048.png");
 
 
 	cube_model = glm::translate(cube_model, glm::vec3(5.0f, 0, 0));
 	plane_model = glm::translate(plane_model, glm::vec3(-5.0f, 0, 0));
+
+	aie::OBJMesh* seth_boi = new aie::OBJMesh();
+	seth_boi->load("../Models/Seth/CharAS.obj");
+	//Mesh* sword = new Mesh(sword_and_shield->m_meshChunks[0].vao, sword_and_shield->m_meshChunks[0].vbo, sword_and_shield->m_meshChunks[0].ibo, sword_and_shield->m_meshChunks[0].indexCount); 
+	Texture* boi_diffuse = new Texture("../Models/Seth/Char_AS_Albedo.png");
+	Texture* boi_normal = new Texture("../Models/Seth/Char_AS_Normal_DirectX.png");
 
 
 	aie::OBJMesh* bunbun = new aie::OBJMesh();
@@ -140,18 +149,18 @@ int main()
 		total_time += delta_time;
 
 		glm::vec4 color = glm::vec4(0.5f); 
-		light01.direction = glm::normalize(glm::vec3(glm::cos(total_time * 2), glm::sin(total_time * 2), 0));
+		light01.direction = glm::normalize(glm::vec3(glm::cos(glfwGetTime() * 2), glm::sin(glfwGetTime() * 2), 0));
 
 		
 		//model = glm::translate(model, glm::vec3(0.01f, 0, 0));
-		
+#pragma region Shader stuff
 		//Turn shader on 
-		obj_shader->Use(); 
+		obj_shader->Use();
 		//Set light01 values 
-		obj_shader->setMat4("model_matrix", model); 
+		obj_shader->setMat4("model_matrix", model);
 		obj_shader->setVec3("Ia", ambient_light);
 		obj_shader->setVec3("Id", light01.diffuse);
-		obj_shader->setVec3("Is", light01.specular); 
+		obj_shader->setVec3("Is", light01.specular);
 		obj_shader->setVec3("light_direction", light01.direction);
 		//Set light02 values 
 		obj_shader->setVec3("Ia2", ambient_light);
@@ -159,17 +168,26 @@ int main()
 		obj_shader->setVec3("Is2", light02.specular);
 		obj_shader->setVec3("light02_direction", light02.direction);
 		//Set material values 
-		obj_shader->setVec3("Ka", bunbun->object_material[0].ambient); 
-		obj_shader->setVec3("Kd", bunbun->object_material[0].diffuse); 
-		obj_shader->setVec3("Ks", bunbun->object_material[0].specular); 
-		obj_shader->setFloat("specular_power", bunbun->object_material[0].specularPower); 
-		//Bind transform 
-		obj_shader->setMat4("projection_view_matrix", main_camera.get_projection_view()); 
-		//Bind transform for lighting 
-		obj_shader->setMat3("normal_matrix", main_camera.get_projection_view()); 
-		obj_shader->setVec3("camera_position", main_camera.get_projection_view()[3]); 
+		//obj_shader->setVec3("Ka", bunbun->object_material[0].ambient); 
+		//obj_shader->setVec3("Kd", bunbun->object_material[0].diffuse); 
+		//obj_shader->setVec3("Ks", bunbun->object_material[0].specular); 
+		//obj_shader->setFloat("specular_power", bunbun->object_material[0].specularPower); 
+		obj_shader->setVec3("Ka", seth_boi->object_material[0].ambient);
+		obj_shader->setVec3("Kd", seth_boi->object_material[0].diffuse);
+		obj_shader->setVec3("Ks", seth_boi->object_material[0].specular);
+		obj_shader->setFloat("specular_power", seth_boi->object_material[0].specularPower);
 
-		bunbun->draw(); 
+		//Bind transform 
+		obj_shader->setMat4("projection_view_matrix", main_camera.get_projection_view());
+		//Bind transform for lighting 
+		obj_shader->setMat3("normal_matrix", glm::inverseTranspose(model));
+		obj_shader->setVec3("camera_position", main_camera.get_projection_view()[3]);
+#pragma endregion
+
+		
+		//draw(sword, obj_shader, sword_diffuse, sword_normal); 
+		//bunbun->draw(); 
+		seth_boi->draw(boi_diffuse, boi_normal); 
 
 #pragma region Drawing
 		if (glfwGetKey(pWindow, GLFW_KEY_1))
@@ -244,6 +262,12 @@ int main()
 	baby_yoda = nullptr;
 	delete world_map;
 	world_map = nullptr; 
+	delete seth_boi;
+	seth_boi = nullptr;
+	delete boi_diffuse;
+	boi_diffuse = nullptr;
+	delete boi_normal;
+	boi_normal = nullptr;
 #pragma endregion
 	return 0;
 }
@@ -264,5 +288,31 @@ void print_shader_error_log(uint shader_id)
 	printf(error_message.c_str());
 	// Clean up anyway
 	delete[] log;
+}
+
+void draw(Mesh* mesh, Shader* shader, Texture* diffuse, Texture* normal)
+{
+	int program = -1;
+	glGetIntegerv(GL_CURRENT_PROGRAM, &program); 
+	int diffuseTexUniform = glGetUniformLocation(program, "diffuse_texture");
+	int normalTexUniform = glGetUniformLocation(program, "normal_texture");
+
+	if (diffuseTexUniform >= 0)
+		glUniform1i(diffuseTexUniform, 0);
+	if (normalTexUniform >= 0)
+		glUniform1i(normalTexUniform, 1);
+
+	glActiveTexture(GL_TEXTURE0);
+	if (diffuse->texture)
+		glBindTexture(GL_TEXTURE_2D, diffuse->texture);
+	else if (diffuseTexUniform >= 0)
+		glBindTexture(GL_TEXTURE_2D, 0);
+	glActiveTexture(GL_TEXTURE1);
+	if (normal->texture)
+		glBindTexture(GL_TEXTURE_2D, normal->texture);
+	else if (normalTexUniform >= 0)
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+	mesh->draw(); 
 }
 

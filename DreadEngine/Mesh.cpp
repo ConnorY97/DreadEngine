@@ -20,6 +20,14 @@ Mesh::~Mesh()
 	glDeleteBuffers(1, &VAO);	
 }
 
+Mesh::Mesh(uint vao, uint vbo, uint ibo, uint index_count)
+{
+	VAO = vao;
+	VBO = vbo;
+	IBO = ibo; 
+	this->index_count = index_count; 
+}
+
 void Mesh::set_up_mesh()
 {
 	glGenVertexArrays(1, &VAO);
@@ -85,4 +93,11 @@ void Mesh::draw(glm::mat4 model, Shader* shader, Texture* texture)
 	glDrawElements(GL_TRIANGLES, this->index.size(), GL_UNSIGNED_INT, 0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
+}
+
+void Mesh::draw()
+{
+	glBindVertexArray(VAO);
+	glDrawElements(GL_TRIANGLES, this->index.size(), GL_UNSIGNED_INT, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
