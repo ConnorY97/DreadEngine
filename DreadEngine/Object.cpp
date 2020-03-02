@@ -2,7 +2,7 @@
 
 Object::Object(Shader* shader)
 {
-	shader->setMat4
+	//shader->setMat4;
 }
 
 Object::~Object()
