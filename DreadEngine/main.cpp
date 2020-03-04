@@ -110,8 +110,10 @@ int main()
 	//Enable the depth buffer 
 	glEnable(GL_DEPTH_TEST);
 
-	glm::mat4 seth_boi_model = glm::mat4(1);
-	glm::mat4 sword_model = glm::mat4(3); 
+	glm::mat4 sword_model = glm::mat4(1);
+	glm::mat4 seth_boi_model = glm::mat4(0.01);
+	seth_boi_model[3][3] = 1.0f;
+	seth_boi_model[3] = glm::vec4(5, 0, 1, 1);
 	
 	//light01.direction = glm::vec3(0.0f, -1.0f, 0.0f);
 	red_light.direction = glm::normalize(glm::vec3(0.5f, 0.5f, 0.5f));
@@ -124,7 +126,7 @@ int main()
 	light01.specular = { 0.5, 0.5, 0.5 };*/
 	red_light.diffuse = { 0.5, 0, 0 };
 	red_light.specular = { 0.5, 0.5, 0.5 }; 
-	broken_light.diffuse = { 0, 0.25, 0 };
+	broken_light.diffuse = { 0, 1, 0.5 };
 	broken_light.specular = { 0.5, 0.5, 0.5 };
 	ambient_light = { 0, 0.25, 0 }; 
 
@@ -201,7 +203,13 @@ int main()
 		//draw(sword, obj_shader, sword_diffuse, sword_normal); 
 		//bunbun->draw(boi_diffuse, boi_normal); 
 		seth_boi->draw(boi_diffuse, boi_normal); 
-		//draw(sword_shield->m_meshChunks[0], obj_shader, sword_diffuse, sword_normal); 
+
+		obj_shader->setMat4("model_matrix", sword_model);
+		obj_shader->setVec3("Ka", sword_shield->object_material[0].ambient);
+		obj_shader->setVec3("Kd", sword_shield->object_material[0].diffuse);
+		obj_shader->setVec3("Ks", sword_shield->object_material[0].specular);
+		obj_shader->setFloat("specular_power", 64.0f);
+		draw(sword_shield->m_meshChunks[1], obj_shader, sword_diffuse, sword_normal); 
 
 #pragma region Drawing
 		if (glfwGetKey(pWindow, GLFW_KEY_1))
@@ -257,8 +265,7 @@ int main()
 		glfwPollEvents();
 
 
-		printf("%f, %f, %f, \n", broken_light.diffuse.x, broken_light.direction.y, broken_light.direction.z);
-
+		
 		glBindTexture(0, 0); 
 	}
 #pragma region Memory cleaning
@@ -287,6 +294,12 @@ int main()
 	boi_diffuse = nullptr;
 	delete boi_normal;
 	boi_normal = nullptr;
+	delete sword_diffuse;
+	sword_diffuse = nullptr;
+	delete sword_normal;
+	sword_normal = nullptr;
+	delete sword_shield;
+	sword_shield = nullptr; 
 #pragma endregion
 	return 0;
 }
@@ -309,31 +322,31 @@ void print_shader_error_log(uint shader_id)
 	delete[] log;
 }
 
-//void draw(aie::MeshChunk& mesh, Shader* shader, Texture* diffuse, Texture* normal)
-//{
-//	int program = -1;
-//	glGetIntegerv(GL_CURRENT_PROGRAM, &program); 
-//	int diffuseTexUniform = glGetUniformLocation(program, "diffuse_texture");
-//	int normalTexUniform = glGetUniformLocation(program, "normal_texture");
-//
-//	if (diffuseTexUniform >= 0)
-//		glUniform1i(diffuseTexUniform, 0);
-//	if (normalTexUniform >= 0)
-//		glUniform1i(normalTexUniform, 1);
-//
-//	glActiveTexture(GL_TEXTURE0);
-//	if (diffuse->texture)
-//		glBindTexture(GL_TEXTURE_2D, diffuse->texture);
-//	else if (diffuseTexUniform >= 0)
-//		glBindTexture(GL_TEXTURE_2D, 0);
-//	glActiveTexture(GL_TEXTURE1);
-//	if (normal->texture)
-//		glBindTexture(GL_TEXTURE_2D, normal->texture);
-//	else if (normalTexUniform >= 0)
-//		glBindTexture(GL_TEXTURE_2D, 0);
-//
-//	mesh.Bind();
-//	glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
-//	mesh.Unbind();
-//}
+void draw(aie::MeshChunk& mesh, Shader* shader, Texture* diffuse, Texture* normal)
+{
+	int program = -1;
+	glGetIntegerv(GL_CURRENT_PROGRAM, &program); 
+	int diffuseTexUniform = glGetUniformLocation(program, "diffuse_texture");
+	int normalTexUniform = glGetUniformLocation(program, "normal_texture");
+
+	if (diffuseTexUniform >= 0)
+		glUniform1i(diffuseTexUniform, 0);
+	if (normalTexUniform >= 0)
+		glUniform1i(normalTexUniform, 1);
+
+	glActiveTexture(GL_TEXTURE0);
+	if (diffuse->texture)
+		glBindTexture(GL_TEXTURE_2D, diffuse->texture);
+	else if (diffuseTexUniform >= 0)
+		glBindTexture(GL_TEXTURE_2D, 0);
+	glActiveTexture(GL_TEXTURE1);
+	if (normal->texture)
+		glBindTexture(GL_TEXTURE_2D, normal->texture);
+	else if (normalTexUniform >= 0)
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+	mesh.Bind();
+	glDrawElements(GL_TRIANGLES, mesh.indexCount, GL_UNSIGNED_INT, 0);
+	mesh.Unbind();
+}
 

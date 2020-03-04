@@ -90,7 +90,7 @@ void main()
 	
 	//vec4 result = vec4(light_direction, 1);
 	vec4 result = vec4(diffuse + ambient + specular, 1);
-	frag_colour = result; 
+	frag_colour = (result * texture_colour);
 }
 
 
