@@ -1,7 +1,7 @@
 //Classic Phong vertex shader
 #version 450
 
-layout(location = 0) in vec3 local_position;
+layout(location = 0) in vec4 local_position;
 layout(location = 1) in vec4 normal;
 layout(location = 2) in vec2 texture_coordinates;
 layout(location = 3) in vec4 tangent; 
@@ -24,10 +24,10 @@ uniform mat3 normal_matrix;
 void main()
 {
 	final_texture_coodinates = texture_coordinates;
-	v_position = model_matrix * vec4(local_position, 1);
+	v_position = model_matrix * local_position;
 	v_normal = normal_matrix * normal.xyz;
 	v_tangent = normal_matrix * tangent.xyz;
-	v_bitangent = cross(v_normal, v_tangent) * tangent.w; 
+	v_bitangent = cross(v_normal, v_tangent) * tangent.w;
 	//gl_Position = projection_view_matrix * vec4(local_position, 1);
 	gl_Position = projection_view_matrix * v_position; 
 }
